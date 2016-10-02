@@ -12,9 +12,20 @@ import models.utils.ExceptionUtils;
  */
 public abstract class RegressionModel extends Model {
 
+
+    /**
+     * Instantiates a new Regression model.
+     */
     public RegressionModel() {
     }
 
+    /**
+     * Gets model instance.
+     *
+     * @param modelTypeName the model type name
+     * @return the model instance
+     * @throws Exception the exception
+     */
     public static Model getModelInstance(ModelTypes.NAME modelTypeName) throws Exception {
         switch (modelTypeName) {
             case LINEAR_REGRESSION:
