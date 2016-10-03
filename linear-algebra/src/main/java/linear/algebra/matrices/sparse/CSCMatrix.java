@@ -2,8 +2,6 @@ package linear.algebra.matrices.sparse;
 
 import linear.algebra.Matrix;
 
-import java.util.Arrays;
-
 /**
  * Created by abhishek on 20/9/16.
  */
@@ -27,7 +25,7 @@ public class CSCMatrix extends Matrix {
      * @param columns        the columns
      * @param values         the values
      * @param rowNums        the row nums
-     * @param columnPointers the column pointers
+     * @param columnPointers <>     </>he column pointers
      */
     public CSCMatrix(int rows, int columns, double[] values, int[] rowNums, int[] columnPointers) {
         super(rows, columns);
@@ -35,6 +33,7 @@ public class CSCMatrix extends Matrix {
         this.rowNums = rowNums;
         this.columnPointers = columnPointers;
     }
+
 
     @Override
     public double value(int row, int column) {
@@ -51,9 +50,8 @@ public class CSCMatrix extends Matrix {
 
 
     @Override
-    /*TODO*/
     public Matrix transpose() {
-        return null;
+        return new CRSMatrix(rows,columns,values,rowNums,columnPointers);
     }
 
 }
