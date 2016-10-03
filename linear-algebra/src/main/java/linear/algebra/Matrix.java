@@ -24,8 +24,8 @@ public abstract class Matrix {
     /**
      * Instantiates a new Matrix.
      *
-     * @param rows    the rows
-     * @param columns the columns
+     * @param rows    sets the number of rows
+     * @param columns sets the number of columns
      */
     public Matrix(int rows, int columns) {
         this.rows = rows;
@@ -33,11 +33,11 @@ public abstract class Matrix {
     }
 
     /**
-     * Value double.
+     * Finds the value stored at index (row,column) of the matrix
      *
-     * @param row    the row
-     * @param column the column
-     * @return the double
+     * @param row    the row index
+     * @param column the column index
+     * @return the double value stored
      */
     public abstract double value(int row, int column);
 
@@ -74,9 +74,9 @@ public abstract class Matrix {
     }
 
     /**
-     * Transpose matrix.
+     * Transposes this matrix and returns the transposed matrix.
      *
-     * @return the matrix
+     * @return the transposed matrix
      */
     public abstract Matrix transpose();
 }

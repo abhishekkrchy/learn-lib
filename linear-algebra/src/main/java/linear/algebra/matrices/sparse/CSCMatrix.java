@@ -4,6 +4,10 @@ import linear.algebra.Matrix;
 
 /**
  * Created by abhishek on 20/9/16.
+ * <p>
+ * This class is the representation for a
+ * CSC(Compressed Sparse Column) matrix and
+ * some related operations.
  */
 public class CSCMatrix extends Matrix {
     private double[] values;
@@ -11,7 +15,7 @@ public class CSCMatrix extends Matrix {
     private int[] columnPointers;
 
     /**
-     * Instantiates a new Csc matrix.
+     * Instantiates a new CSC matrix.
      */
     public CSCMatrix() {
         this(0, 0, new double[]{}, new int[]{}, new int[]{});
@@ -19,13 +23,13 @@ public class CSCMatrix extends Matrix {
 
 
     /**
-     * Instantiates a new Csc matrix.
+     * Instantiates a new CSC matrix.
      *
-     * @param rows           the rows
-     * @param columns        the columns
-     * @param values         the values
-     * @param rowNums        the row nums
-     * @param columnPointers <>     </>he column pointers
+     * @param rows           the number of rows
+     * @param columns        the number of columns
+     * @param values         the value array(non-zero values in the sparse matrix)
+     * @param rowNums        the row nums or row-indexes of the non zero elements
+     * @param columnPointers the column pointers index of 1st non-zero element in ith column
      */
     public CSCMatrix(int rows, int columns, double[] values, int[] rowNums, int[] columnPointers) {
         super(rows, columns);
@@ -37,11 +41,11 @@ public class CSCMatrix extends Matrix {
 
     @Override
     public double value(int row, int column) {
-        int startIndexInRow = rowNums[row];
-        int endIndexInRow = row == rowNums.length - 1 ? values.length - 1 : rowNums[row + 1] - 1;
-        for (int i = startIndexInRow; i <= endIndexInRow; i++) {
-            int columnGot = columnPointers[i];
-            if (columnGot == column) {
+        int startIndexInCol = columnPointers[column];
+        int endIndexInCol = columnPointers[column + 1] - 1;
+        for (int i = startIndexInCol; i <= endIndexInCol; i++) {
+            int rowGot = rowNums[i];
+            if (rowGot == row) {
                 return values[i];
             }
         }
@@ -51,7 +55,7 @@ public class CSCMatrix extends Matrix {
 
     @Override
     public Matrix transpose() {
-        return new CRSMatrix(rows,columns,values,rowNums,columnPointers);
+        return new CRSMatrix(rows, columns, values, rowNums, columnPointers);
     }
 
 }
