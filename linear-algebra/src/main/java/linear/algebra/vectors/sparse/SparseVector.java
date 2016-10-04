@@ -36,7 +36,7 @@ public class SparseVector extends Vector {
     }
 
     public double value(int index) {
-        int searchIndex = Arrays.binarySearch(values, index);
-        return values[searchIndex == -1 ? 0 : searchIndex] == index ? values[index] : 0;
+        int searchIndex = Arrays.binarySearch(indices, index);
+        return indices[searchIndex == -1 ? 0 : searchIndex] == index ? values[searchIndex] : 0;
     }
 }
