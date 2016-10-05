@@ -4,8 +4,8 @@ import models.Model;
 import models.constants.ModelTypes;
 import models.regression.linear.LinearRegressionModel;
 import models.regression.logistic.LogisticRegressionModel;
-import models.utils.ExceptionConstants;
-import models.utils.ExceptionUtils;
+import utils.ExceptionConstants;
+import utils.ExceptionUtils;
 
 /**
  * Created by abhishek on 29/9/16.

@@ -12,14 +12,6 @@ public class LogisticRegressionModel extends RegressionModel {
 
     }
 
-    /**
-     * Predict.
-     */
-    @Override
-    public void predict() {
-
-    }
-
     @Override
     public void load(String path) {
 

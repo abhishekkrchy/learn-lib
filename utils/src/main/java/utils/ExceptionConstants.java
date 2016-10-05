@@ -1,4 +1,4 @@
-package models.utils;
+package utils;
 
 /**
  * Created by abhishek on 29/9/16.
@@ -20,4 +20,6 @@ public class ExceptionConstants {
      * The constant MODEL_NOT_BUILT.
      */
     public static String MODEL_NOT_BUILT = "Model not evaluated till now.";
+
+    public static String INCOMPATIBLE_MATRICES = "given matrices should satisfy (mxn)*(nxp)=(mxp) rule.";
 }

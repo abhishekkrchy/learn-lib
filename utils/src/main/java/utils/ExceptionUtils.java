@@ -1,4 +1,4 @@
-package models.utils;
+package utils;
 
 /**
  * Created by abhishek on 29/9/16.
