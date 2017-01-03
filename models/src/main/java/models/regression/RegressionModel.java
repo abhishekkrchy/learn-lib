@@ -1,5 +1,7 @@
 package models.regression;
 
+import linear.algebra.matrices.dense.TwoDimensionalMatrix;
+import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import models.constants.Optimizer;
 import models.constants.RegularizationFunction;
@@ -23,8 +25,10 @@ public abstract class RegressionModel extends Model {
     protected int numberOfVariables;
     protected int numberOfExamples;
     protected double[][] dataSet;
-    protected double[][] trainingData;
-    protected double[][] testingData;
+    protected double[][] trainingX;
+    protected double[] trainingY;
+    protected double[][] testingX;
+    protected double[] testingY;
     protected double[] factors;
     protected Optimizer optimizerType = GRADIENT_DESCENT;
     protected RegularizationFunction regularizationFunction = NONE;
@@ -33,7 +37,7 @@ public abstract class RegressionModel extends Model {
     protected double regularizationCoefficient = 0.01;
     protected double minDescentLimit = 0.0001;
     protected Set<Integer> testIndexes = new HashSet<>();
-    protected double testingDataPercent=25.0;
+    protected double testingDataPercent = 25.0;
 
     /**
      * Instantiates a new Regression model.
@@ -157,29 +161,30 @@ public abstract class RegressionModel extends Model {
         return this;
     }
 
-    public void assignTrainAndTest(double testingDataPercent){
-        this.testingDataPercent=testingDataPercent;
+    public void assignTrainAndTest(double testingDataPercent) {
+        this.testingDataPercent = testingDataPercent;
         assignTrainAndTest();
     }
 
     public void assignTrainAndTest() {
-        int numberOfTestRows = (int) Math.floor(numberOfExamples *  (testingDataPercent / 100));
+        int numberOfTestRows = (int) Math.floor(numberOfExamples * (testingDataPercent / 100));
         Random random = new Random(new Date().getTime());
         while (testIndexes.size() < numberOfTestRows) {
             testIndexes.add(random.nextInt(numberOfExamples - 1));
         }
-        trainingData = new double[numberOfExamples - numberOfTestRows][numberOfVariables];
+        trainingX = new double[numberOfExamples - numberOfTestRows][numberOfVariables - 1];
+        trainingY = new double[numberOfExamples - numberOfTestRows];
         int testIndex = 0;
         int trainIndex = 0;
         for (int i = 0; i < dataSet.length; i++) {
             if (testIndexes.contains(i)) {
-                testingData[testIndex++] = dataSet[i];
-                dataSet[i]=null;
+                testingX[testIndex] = Arrays.copyOfRange(dataSet[i], 0, dataSet[i].length - 1);
+                testingY[testIndex++] = dataSet[i][dataSet[i].length - 1];
+            } else {
+                trainingX[trainIndex] = Arrays.copyOfRange(dataSet[i], 0, dataSet[i].length - 1);
+                trainingY[trainIndex++] = dataSet[i][dataSet[i].length - 1];
             }
-            else {
-                trainingData[trainIndex++] = dataSet[i];
-                dataSet[i]=null;
-            }
+            dataSet[i] = null;
         }
     }
 
@@ -237,5 +242,37 @@ public abstract class RegressionModel extends Model {
 
     public void setMinDescentLimit(double minDescentLimit) {
         this.minDescentLimit = minDescentLimit;
+    }
+
+    public TwoDimensionalMatrix getTrainingX() {
+        return new TwoDimensionalMatrix(trainingX);
+    }
+
+    public void setTrainingX(double[][] trainingX) {
+        this.trainingX = trainingX;
+    }
+
+    public double[][] getTestingX() {
+        return testingX;
+    }
+
+    public void setTestingX(double[][] testingX) {
+        this.testingX = testingX;
+    }
+
+    public DenseVector getTrainingY() {
+        return new DenseVector(trainingY);
+    }
+
+    public void setTrainingY(double[] trainingY) {
+        this.trainingY = trainingY;
+    }
+
+    public double[] getTestingY() {
+        return testingY;
+    }
+
+    public void setTestingY(double[] testingY) {
+        this.testingY = testingY;
     }
 }

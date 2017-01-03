@@ -2,6 +2,7 @@ package linear.algebra.matrices.dense;
 
 import linear.algebra.Matrix;
 import linear.algebra.matrices.utils.Matrices;
+import linear.algebra.vectors.dense.DenseVector;
 
 /**
  * Created by abhishek on 20/9/16.
@@ -51,6 +52,18 @@ public class TwoDimensionalMatrix extends Matrix {
             }
         }
         return new TwoDimensionalMatrix(transposed);
+    }
+
+    public DenseVector getRow(int index) {
+        return new DenseVector(values[index]);
+    }
+
+    public DenseVector getColumn(int index) {
+        double[] column = new double[rows];
+        for (int i = 0; i < rows; i++) {
+            column[i] = value(index,i);
+        }
+        return new DenseVector(column);
     }
 
 

@@ -2,6 +2,11 @@ package linear.algebra.vectors.dense;
 
 import linear.algebra.Vector;
 
+import java.util.Arrays;
+import java.util.function.DoubleUnaryOperator;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 
 /**
  * Created by abhishek on 4/10/16.
@@ -17,9 +22,9 @@ public class DenseVector extends Vector {
      *
      * @param size the size of the vector.
      */
-    public DenseVector(int size) {
-        super(size);
-        this.values = new double[size];
+    public DenseVector(double[] values) {
+        super(values.length);
+        this.values = values;
     }
 
     public double value(int index) {
@@ -36,6 +41,12 @@ public class DenseVector extends Vector {
     public DenseVector(int size, double[] values) {
         super(size);
         this.values = values;
+        Arrays.stream(values).forEach(System.out::println);
+    }
+
+    public DenseVector map(DoubleUnaryOperator function){
+        this.values=Arrays.stream(this.values).map(function).toArray();
+        return this;
     }
 
 }

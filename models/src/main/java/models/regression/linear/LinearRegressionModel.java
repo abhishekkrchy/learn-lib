@@ -1,5 +1,6 @@
 package models.regression.linear;
 
+import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import models.regression.RegressionModel;
 import optimizer.GradientDescent;
@@ -33,6 +34,6 @@ public class LinearRegressionModel extends RegressionModel {
 
     }
     private double[] gradientDescent(double[] initial){
-        return GradientDescent.iterate(initial,this);
+        return GradientDescent.iterate(new DenseVector(initial),this);
     }
 }
