@@ -34,7 +34,7 @@ public abstract class Model {
     /**
      * Build.
      */
-    public abstract void build();
+    public abstract Model build();
 
     /**
      * Predict double.
@@ -49,14 +49,14 @@ public abstract class Model {
         predict(inpath,outpath,false);
     }
     public abstract void predict(String inpath, String outpath,boolean header) throws Exception;
-    public abstract void loadDataSet(String path, boolean header) throws Exception;
+    public abstract Model loadDataSet(String path, boolean header) throws Exception;
 
     /**
      * Load.
      *
      * @param path the path
      */
-    public abstract void load(String path);
+    public abstract Model load(String path);
 
     /**
      * Export.
@@ -64,4 +64,6 @@ public abstract class Model {
      * @param path the path
      */
     public abstract void export(String path);
+
+    public abstract void assignTrainAndTest(double testingDataPercent);
 }

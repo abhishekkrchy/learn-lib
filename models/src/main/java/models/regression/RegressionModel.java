@@ -11,8 +11,7 @@ import utils.ExceptionConstants;
 import utils.ExceptionUtils;
 import utils.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static models.constants.Optimizer.GRADIENT_DESCENT;
 import static models.constants.RegularizationFunction.NONE;
@@ -21,16 +20,20 @@ import static models.constants.RegularizationFunction.NONE;
  * Created by abhishek on 29/9/16.
  */
 public abstract class RegressionModel extends Model {
-    private int numberOfVariables;
-    private int numberOfExamples;
-    private double[][] dataSet;
-    private double[] factors;
-    private Optimizer optimizer = GRADIENT_DESCENT;
-    private RegularizationFunction regularizationFunction = NONE;
-    private int maxIterations = 100000;
-    private double learningRate = 0.001;
-    private double regularizationCoefficient = 0.01;
-    private double minDescentLimit = 0.0001;
+    protected int numberOfVariables;
+    protected int numberOfExamples;
+    protected double[][] dataSet;
+    protected double[][] trainingData;
+    protected double[][] testingData;
+    protected double[] factors;
+    protected Optimizer optimizerType = GRADIENT_DESCENT;
+    protected RegularizationFunction regularizationFunction = NONE;
+    protected int maxIterations = 100000;
+    protected double learningRate = 0.001;
+    protected double regularizationCoefficient = 0.01;
+    protected double minDescentLimit = 0.0001;
+    protected Set<Integer> testIndexes = new HashSet<>();
+    protected double testingDataPercent=25.0;
 
     /**
      * Instantiates a new Regression model.
@@ -79,7 +82,6 @@ public abstract class RegressionModel extends Model {
     }
 
 
-
     public double predict(List<Double> values) throws Exception {
         if (!modelBuilt)
             throw ExceptionUtils.getException(ExceptionConstants.MODEL_NOT_BUILT);
@@ -108,6 +110,7 @@ public abstract class RegressionModel extends Model {
         }
         return output;
     }
+
     /**
      * Predict.
      *
@@ -122,8 +125,9 @@ public abstract class RegressionModel extends Model {
         for (List<Double> data : dataSet) {
             predictions.add(predict(data));
         }
-        Utils.writePredictions(predictions,outpath);
+        Utils.writePredictions(predictions, outpath);
     }
+
     /**
      * Load data set.
      *
@@ -131,11 +135,11 @@ public abstract class RegressionModel extends Model {
      * @param header the header
      * @throws Exception the exception
      */
-    public void loadDataSet(String path, boolean header) throws Exception {
+    public Model loadDataSet(String path, boolean header) throws Exception {
         List<List<Double>> csvData = CSVUtils.loadData(path, header);
         numberOfExamples = csvData.size();
         if (numberOfExamples > 0) {
-            numberOfVariables = csvData.get(0).size();
+            numberOfVariables = csvData.get(0).size() - 1;
             if (numberOfVariables == 0)
                 throw ExceptionUtils.getException(ExceptionConstants.EMPTY_CSV_DATA);
         } else {
@@ -150,5 +154,88 @@ public abstract class RegressionModel extends Model {
             }
         }
         factors = new double[numberOfVariables];
+        return this;
+    }
+
+    public void assignTrainAndTest(double testingDataPercent){
+        this.testingDataPercent=testingDataPercent;
+        assignTrainAndTest();
+    }
+
+    public void assignTrainAndTest() {
+        int numberOfTestRows = (int) Math.floor(numberOfExamples *  (testingDataPercent / 100));
+        Random random = new Random(new Date().getTime());
+        while (testIndexes.size() < numberOfTestRows) {
+            testIndexes.add(random.nextInt(numberOfExamples - 1));
+        }
+        trainingData = new double[numberOfExamples - numberOfTestRows][numberOfVariables];
+        int testIndex = 0;
+        int trainIndex = 0;
+        for (int i = 0; i < dataSet.length; i++) {
+            if (testIndexes.contains(i)) {
+                testingData[testIndex++] = dataSet[i];
+                dataSet[i]=null;
+            }
+            else {
+                trainingData[trainIndex++] = dataSet[i];
+                dataSet[i]=null;
+            }
+        }
+    }
+
+    public double[] getFactors() {
+        return factors;
+    }
+
+    public void setFactors(double[] factors) {
+        this.factors = factors;
+    }
+
+    public Optimizer getOptimizerType() {
+        return optimizerType;
+    }
+
+    public void setOptimizerType(Optimizer optimizerType) {
+        this.optimizerType = optimizerType;
+    }
+
+    public RegularizationFunction getRegularizationFunction() {
+        return regularizationFunction;
+    }
+
+    public void setRegularizationFunction(RegularizationFunction regularizationFunction) {
+        this.regularizationFunction = regularizationFunction;
+    }
+
+    public int getMaxIterations() {
+        return maxIterations;
+    }
+
+    public void setMaxIterations(int maxIterations) {
+        this.maxIterations = maxIterations;
+    }
+
+    public double getLearningRate() {
+        return learningRate;
+    }
+
+    public void setLearningRate(double learningRate) {
+        this.learningRate = learningRate;
+    }
+
+    public double getRegularizationCoefficient() {
+        return regularizationCoefficient;
+    }
+
+    public void setRegularizationCoefficient(double regularizationCoefficient) {
+        this.regularizationCoefficient = regularizationCoefficient;
+    }
+
+    public double getMinDescentLimit() {
+        return minDescentLimit;
+    }
+
+    public void setMinDescentLimit(double minDescentLimit) {
+        this.minDescentLimit = minDescentLimit;
     }
 }
