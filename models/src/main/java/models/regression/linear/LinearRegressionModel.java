@@ -34,6 +34,11 @@ public class LinearRegressionModel extends RegressionModel {
 
     }
     private double[] gradientDescent(double[] initial){
-        return GradientDescent.iterate(new DenseVector(initial),this);
+        try {
+            GradientDescent.iterate(new DenseVector(initial),this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;//GradientDescent.iterate(new DenseVector(initial),this);
     }
 }

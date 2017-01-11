@@ -1,5 +1,6 @@
 package models.regression.logistic;
 
+import models.Model;
 import models.regression.RegressionModel;
 
 /**
@@ -8,13 +9,13 @@ import models.regression.RegressionModel;
 public class LogisticRegressionModel extends RegressionModel {
 
     @Override
-    public void build() {
-
+    public Model build() {
+        return null;
     }
 
     @Override
-    public void load(String path) {
-
+    public Model load(String path) {
+        return null;
     }
 
     @Override
