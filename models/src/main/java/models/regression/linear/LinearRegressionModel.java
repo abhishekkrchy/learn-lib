@@ -4,12 +4,9 @@ import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import models.regression.RegressionModel;
 import optimizer.GradientDescent;
-import statistics.Distributions;
+import statistics.util.Statistics;
 
 
-/**
- * Created by abhishek on 29/9/16.
- */
 public class LinearRegressionModel extends RegressionModel {
     public LinearRegressionModel() {
     }
@@ -17,9 +14,8 @@ public class LinearRegressionModel extends RegressionModel {
     @Override
     public Model build() {
         assignTrainAndTest();
-       // initial
-        double[] initial = Distributions.NORMAL_DISTRIBUTION.getNSmaples(numberOfVariables+1);
-        gradientDescent(initial);
+        DenseVector entryPoint = Statistics.getNormalDistributionSamples(numberOfVariables+1);
+        gradientDescent(entryPoint);
         modelBuilt = true;
         return this;
     }
@@ -33,12 +29,12 @@ public class LinearRegressionModel extends RegressionModel {
     public void export(String path) {
 
     }
-    private double[] gradientDescent(double[] initial){
+    private DenseVector gradientDescent(DenseVector entryPoint){
         try {
-            GradientDescent.iterate(new DenseVector(initial),this);
+            GradientDescent.iterate(entryPoint,this);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;//GradientDescent.iterate(new DenseVector(initial),this);
+        return null;
     }
 }
