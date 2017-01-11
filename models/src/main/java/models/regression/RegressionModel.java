@@ -3,9 +3,9 @@ package models.regression;
 import linear.algebra.matrices.dense.TwoDimensionalMatrix;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
-import models.constants.Optimizer;
-import models.constants.RegularizationFunction;
-import models.constants.ModelType;
+import util.constants.enums.Optimizer;
+import util.constants.enums.RegularizationFunction;
+import util.constants.enums.ModelType;
 import models.regression.linear.LinearRegressionModel;
 import models.regression.logistic.LogisticRegressionModel;
 import utils.CSVUtils;
@@ -15,8 +15,8 @@ import utils.Utils;
 
 import java.util.*;
 
-import static models.constants.Optimizer.GRADIENT_DESCENT;
-import static models.constants.RegularizationFunction.NONE;
+import static util.constants.enums.Optimizer.GRADIENT_DESCENT;
+import static util.constants.enums.RegularizationFunction.NONE;
 
 /**
  * Created by abhishek on 29/9/16.

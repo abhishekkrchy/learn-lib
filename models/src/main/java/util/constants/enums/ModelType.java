@@ -1,4 +1,4 @@
-package models.constants;
+package util.constants.enums;
 
 /**
  * Created by abhishek on 29/9/16.

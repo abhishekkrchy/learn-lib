@@ -1,12 +1,8 @@
 package linear.algebra.matrices.dense;
 
 import linear.algebra.Matrix;
-import linear.algebra.matrices.utils.Matrices;
 import linear.algebra.vectors.dense.DenseVector;
 
-/**
- * Created by abhishek on 20/9/16.
- */
 public class TwoDimensionalMatrix extends Matrix {
     private double[][] values;
 

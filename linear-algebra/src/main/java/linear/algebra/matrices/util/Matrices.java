@@ -1,4 +1,4 @@
-package linear.algebra.matrices.utils;
+package linear.algebra.matrices.util;
 
 import linear.algebra.Matrix;
 import linear.algebra.matrices.dense.TwoDimensionalMatrix;
@@ -8,8 +8,6 @@ import utils.ExceptionConstants;
 import utils.ExceptionUtils;
 
 /**
- * Created by abhishek on 1/10/16.
- * <p>
  * Utility class for matrix operations.
  */
 public class Matrices {

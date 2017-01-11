@@ -1,8 +1,5 @@
 package linear.algebra;
 
-/**
- * Created by abhishek on 20/9/16.
- */
 public abstract class Matrix {
     /**
      * Number of Rows In The Matrix.

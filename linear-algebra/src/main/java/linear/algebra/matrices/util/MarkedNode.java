@@ -1,8 +1,7 @@
-package linear.algebra.matrices.utils;
+package linear.algebra.matrices.util;
 
-/**
- * Created by abhishek on 11/1/17.
- */
+import linear.algebra.matrices.util.constants.enums.AlgebraicFunction;
+
 public class MarkedNode {
     private double childNodeExponent = 1.0;
     private double variableCoefficient = 1.0;

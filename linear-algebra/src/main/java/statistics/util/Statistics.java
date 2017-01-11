@@ -1,7 +1,7 @@
 package statistics.util;
 
-import linear.algebra.matrices.utils.AlgebraicFunction;
-import linear.algebra.matrices.utils.MarkedNode;
+import linear.algebra.matrices.util.constants.enums.AlgebraicFunction;
+import linear.algebra.matrices.util.MarkedNode;
 import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.Random;

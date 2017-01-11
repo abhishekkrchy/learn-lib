@@ -5,8 +5,6 @@ import linear.algebra.Vector;
 import java.util.Arrays;
 
 /**
- * Created by abhishek on 4/10/16.
- * <p>
  * A simple sparse vector class.
  */
 public class SparseVector extends Vector {

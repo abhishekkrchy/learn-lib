@@ -5,9 +5,6 @@ import linear.algebra.vectors.dense.DenseVector;
 import utils.ExceptionConstants;
 import utils.ExceptionUtils;
 
-/**
- * Created by abhishek on 3/1/17.
- */
 public class Utils {
     public static DenseVector multiply(TwoDimensionalMatrix twoDimensionalMatrix, DenseVector denseVector) throws Exception {
         if (twoDimensionalMatrix.getColumns() != denseVector.size)

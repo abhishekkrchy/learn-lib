@@ -1,4 +1,4 @@
-package models.constants;
+package util;
 
 /**
  * Created by abhishek on 10/1/17.

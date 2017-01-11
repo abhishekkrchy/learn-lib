@@ -1,8 +1,6 @@
 package linear.algebra;
 
 /**
- * Created by abhishek on 4/10/16.
- * <p>
  * A simple vector class.
  */
 public abstract class Vector {

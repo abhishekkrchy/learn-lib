@@ -3,8 +3,6 @@ package linear.algebra.matrices.sparse;
 import linear.algebra.Matrix;
 
 /**
- * Created by abhishek on 4/10/16.
- * <p>
  * This class is the representation for a
  * CSC(Compressed Sparse Column) matrix and
  * some related operations.
