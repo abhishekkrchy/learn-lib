@@ -13,11 +13,8 @@ import java.util.function.Function;
  */
 public class Functions {
 
-    public static BiFunction<Calculator,Integer,MarkedNode> LOSS_FUNCTION = this::lossFunction;
-    public static BiFunction<Calculator, Integer,MarkedNode> MEAN_SQUARED_ERROR = this::meanSquaredError;
-
-    private MarkedNode lossFunction(Calculator calculator, int varPos) {
-        MarkedNode loss = MEAN_SQUARED_ERROR.apply(calculator,varPos);
+    public static MarkedNode lossFunction(Calculator calculator, int varPos) {
+        MarkedNode loss = meanSquaredError(calculator,varPos);
         if (calculator.getRegularizationFunction().equals(RegularizationFunction.L1)) {
             double cons=0;
             cons += calculator.getRegularizationCoefficient() * (calculator.getDenseVector2().slice(0, calculator.getDenseVector2().getSize()).map(Math::abs).reduce(Double::sum) - Math.abs(calculator.getDenseVector2().value(varPos)));
@@ -38,7 +35,7 @@ public class Functions {
         return loss;
     }
 
-    private double meanSquaredError(Calculator calculator) {
+    public static double meanSquaredError(Calculator calculator) {
         double total = 0.0;
         for (int i = 0; i < calculator.getDenseVector1().getSize(); i++) {
             total += Math.pow(calculator.getDenseVector1().value(i) - calculator.getDenseVector2().value(i), 2.0);
@@ -46,7 +43,7 @@ public class Functions {
         return total / calculator.getDenseVector1().getSize();
     }
 
-    private MarkedNode meanSquaredError(Calculator calculator, int varPos) {
+    public static MarkedNode meanSquaredError(Calculator calculator, int varPos) {
         double total = 0.0;
         MarkedNode markedNode = new MarkedNode();
         for (int i = 0; i < calculator.getDenseVector1().getSize(); i++) {
@@ -64,37 +61,5 @@ public class Functions {
         return markedNode;
     }
 
-    public static void main(String[] args) {
-        Functions functions = new Functions();
-        Calculator calculator = new Calculator();
-        double x = 1, y = 0;
-        calculator.setDenseVector1(new DenseVector(new double[]{1, 2}));
-        calculator.setDenseVector2(new DenseVector(new double[]{11, 2}));
-       // System.out.println(functions.MEAN_SQUARED_ERROR.apply(calculator));
-    }
 
-   /* Function<Function<Calculator, Double>,Function<Calculator, Double>> GRADIENT = new Function<Function<Calculator, Double>, Function<Calculator, Double>>() {
-        @Override
-        public Function<Calculator, Double> apply(Function<Calculator, Double> function) {
-            return null;
-        }
-    }*/
-
-    /*static BiFunction<Double, Double, Double> powerFunction = Math::pow;
-    static BiFunction<Double, Double, Double> multiplication = (aDouble, aDouble2) -> aDouble * aDouble2;
-    static BiFunction<Double, Double, Double> addition = (aDouble, aDouble2) -> aDouble + aDouble2;
-    static BiFunction<Double, Double, Double> subtraction = (aDouble, aDouble2) -> aDouble - aDouble2;
-    //BiFunction<Double, Double, Double> division = (aDouble, aDouble2) -> aDouble / aDouble2;
-
-    static Function<BiFunction<Double, Double, Double>, BiFunction<Double, Double, Double>> derivative = function -> {
-        if (function == powerFunction)
-            return (aDouble, aDouble2) -> aDouble2 * (Math.pow(aDouble, aDouble2));
-        else if (function == addition)
-            return (aDouble, aDouble2) -> 1.0;
-        else if (function == subtraction)
-            return (aDouble, aDouble2) -> (-1.0);
-        else if (function == multiplication)
-            return (aDouble, aDouble2) -> aDouble;
-        return null;
-    };*/
 }
