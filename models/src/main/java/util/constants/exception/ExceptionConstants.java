@@ -18,5 +18,4 @@ public class ExceptionConstants {
      */
     public static String MODEL_NOT_BUILT = "Model not evaluated till now.";
 
-    public static String INCOMPATIBLE_MATRICES = "given matrices should satisfy (mxn)*(nxp)=(mxp) rule.";
 }

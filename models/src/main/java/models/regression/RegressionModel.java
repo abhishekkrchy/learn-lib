@@ -1,7 +1,7 @@
 package models.regression;
 
 import linear.algebra.matrices.dense.DenseMatrix;
-import linear.algebra.util.constants.exception.ExceptionConstants;
+import util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import util.ExceptionUtils;
