@@ -2,13 +2,11 @@ package linear.algebra.vectors.dense;
 
 import linear.algebra.Vector;
 
+import java.util.Arrays;
 import java.util.Iterator;
-import java.util.function.DoubleBinaryOperator;
-import java.util.function.DoubleConsumer;
-import java.util.function.DoubleUnaryOperator;
+import java.util.stream.DoubleStream;
 
 import static java.util.Arrays.copyOfRange;
-import static java.util.Arrays.stream;
 
 
 /**
@@ -31,11 +29,6 @@ public class DenseVector implements Vector {
     }
 
     @Override
-    public void forEach(DoubleConsumer action) {
-        stream(values).forEach(action);
-    }
-
-    @Override
     public Iterator<Double> iterator() {
         return new Iterator<Double>() {
             private int index = 0;
@@ -53,17 +46,13 @@ public class DenseVector implements Vector {
     }
 
     @Override
-    public DenseVector map(DoubleUnaryOperator function) {
-        return new DenseVector(stream(this.values).map(function).toArray());
+    public DenseVector slice(int fromIndex, int toIndex) {
+        return new DenseVector(copyOfRange(this.values, fromIndex, toIndex));
     }
 
     @Override
-    public double reduce(double identity,DoubleBinaryOperator function) {
-        return stream(this.values).reduce(identity, function);
-    }
-
-    public DenseVector slice(int fromIndex, int toIndex) {
-        return new DenseVector(copyOfRange(this.values, fromIndex, toIndex));
+    public DoubleStream stream() {
+        return Arrays.stream(values);
     }
 
 
