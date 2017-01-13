@@ -1,6 +1,6 @@
 package models.regression;
 
-import linear.algebra.matrices.dense.TwoDimensionalMatrix;
+import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import util.constants.enums.Optimizer;
@@ -244,8 +244,8 @@ public abstract class RegressionModel extends Model {
         this.minDescentLimit = minDescentLimit;
     }
 
-    public TwoDimensionalMatrix getTrainingX() {
-        return new TwoDimensionalMatrix(trainingX);
+    public DenseMatrix getTrainingX() {
+        return new DenseMatrix(trainingX);
     }
 
     public void setTrainingX(double[][] trainingX) {

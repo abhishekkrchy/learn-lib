@@ -3,13 +3,13 @@ package linear.algebra.matrices.dense;
 import linear.algebra.Matrix;
 import linear.algebra.vectors.dense.DenseVector;
 
-public class TwoDimensionalMatrix extends Matrix {
+public class DenseMatrix extends Matrix {
     private double[][] values;
 
     /**
      * Instantiates a new Two dimensional matrix.
      */
-    public TwoDimensionalMatrix() {
+    public DenseMatrix() {
         this(0, 0);
     }
 
@@ -19,7 +19,7 @@ public class TwoDimensionalMatrix extends Matrix {
      * @param rows    the rows
      * @param columns the columns
      */
-    public TwoDimensionalMatrix(int rows, int columns) {
+    public DenseMatrix(int rows, int columns) {
         super(rows, columns);
         this.values = new double[rows][columns];
     }
@@ -29,7 +29,7 @@ public class TwoDimensionalMatrix extends Matrix {
      *
      * @param values the values
      */
-    public TwoDimensionalMatrix(double[][] values) {
+    public DenseMatrix(double[][] values) {
         super(values.length, values[0].length);
         this.values = values;
     }
@@ -47,7 +47,7 @@ public class TwoDimensionalMatrix extends Matrix {
                 transposed[i][j] = values[j][i];
             }
         }
-        return new TwoDimensionalMatrix(transposed);
+        return new DenseMatrix(transposed);
     }
 
     public DenseVector getRow(int index) {

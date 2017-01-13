@@ -1,38 +1,26 @@
 package linear.algebra;
 
+import java.util.Iterator;
+import java.util.function.DoubleBinaryOperator;
+import java.util.function.DoubleConsumer;
+import java.util.function.DoubleUnaryOperator;
+
 /**
  * A simple vector class.
  */
-public abstract class Vector {
-    protected int size;
+public interface Vector {
 
-    public Vector(int size) {
-        this.size = size;
-    }
+    int size();
 
-    /**
-     * Gets size of the vector.
-     *
-     * @return the size
-     */
-    public int getSize() {
-        return size;
-    }
+    double value(int index);
 
-    /**
-     * Sets size of the vector.
-     *
-     * @param size the size to be set.
-     */
-    public void setSize(int size) {
-        this.size = size;
-    }
+    void forEach(DoubleConsumer action);
 
-    /**
-     * Gets value at a particular index in the vector.
-     *
-     * @param index the index
-     * @return the double value at that index.
-     */
-    public abstract double value(int index);
+    Iterator<Double> iterator();
+
+    Vector map(DoubleUnaryOperator doubleUnaryOperator);
+
+    double reduce(double identity, DoubleBinaryOperator doubleUnaryOperator);
+
+    Vector slice(int fromIndex, int toIndex);
 }

@@ -1,7 +1,7 @@
 package linear.algebra.matrices.util;
 
 import linear.algebra.Matrix;
-import linear.algebra.matrices.dense.TwoDimensionalMatrix;
+import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.matrices.sparse.CRSMatrix;
 import linear.algebra.matrices.sparse.CSCMatrix;
 import utils.ExceptionConstants;
@@ -20,7 +20,7 @@ public class Matrices {
      * @return the product matrix of dimensions m x p
      * @throws Exception dimensions incompatible exception
      */
-    public static Matrix multiply(TwoDimensionalMatrix matrix1, TwoDimensionalMatrix matrix2) throws Exception {
+    public static Matrix multiply(DenseMatrix matrix1, DenseMatrix matrix2) throws Exception {
         checkCompatibility(matrix1.getColumns(), matrix2.getRows());
         double[][] productMatrixValues = new double[matrix1.getRows()][matrix2.getColumns()];
         for (int i = 0; i < matrix1.getRows(); i++) {
@@ -32,7 +32,7 @@ public class Matrices {
                 }
             }
         }
-        return new TwoDimensionalMatrix(productMatrixValues);
+        return new DenseMatrix(productMatrixValues);
     }
 
     //TODO add
