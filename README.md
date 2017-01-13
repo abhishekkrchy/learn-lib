@@ -1,2 +1,2 @@
 # learn-lib
-A Simple Machine Learning Library
+A Very Simple Machine Learning Library

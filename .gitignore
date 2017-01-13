@@ -2,9 +2,6 @@
 ### Java template
 *.class
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
 # Package Files #
 *.jar
 *.war
@@ -16,8 +13,6 @@ hs_err_pid*
 .gitignore
 .idea/
 *.iml
-linear-algebra/src/test/
 linear-algebra/target/
 models/target/
-utils/target/
 
