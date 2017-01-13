@@ -1,10 +1,9 @@
 package linear.algebra;
 
 import linear.algebra.matrices.dense.DenseMatrix;
+import linear.algebra.util.ExceptionUtils;
+import linear.algebra.util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.dense.DenseVector;
-import utils.ExceptionConstants;
-import utils.ExceptionUtils;
-
 public class Utils {
     public static DenseVector multiply(DenseMatrix denseMatrix, DenseVector denseVector) throws Exception {
         if (denseMatrix.getColumns() != denseVector.size())

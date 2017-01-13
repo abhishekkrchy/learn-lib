@@ -4,7 +4,7 @@ import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import models.regression.RegressionModel;
 import optimizer.GradientDescent;
-import statistics.util.Statistics;
+import linear.algebra.statistics.Statistics;
 
 
 public class LinearRegressionModel extends RegressionModel {

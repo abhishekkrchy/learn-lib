@@ -1,17 +1,17 @@
 package models.regression;
 
 import linear.algebra.matrices.dense.DenseMatrix;
+import linear.algebra.util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
+import util.ExceptionUtils;
+import util.FileUtils;
+import util.ModelUtils;
 import util.constants.enums.Optimizer;
 import util.constants.enums.RegularizationFunction;
 import util.constants.enums.ModelType;
 import models.regression.linear.LinearRegressionModel;
 import models.regression.logistic.LogisticRegressionModel;
-import utils.CSVUtils;
-import utils.ExceptionConstants;
-import utils.ExceptionUtils;
-import utils.Utils;
 
 import java.util.*;
 
@@ -124,12 +124,12 @@ public abstract class RegressionModel extends Model {
      * @throws Exception the exception
      */
     public void predict(String inpath, String outpath, boolean header) throws Exception {
-        List<List<Double>> dataSet = CSVUtils.loadData(inpath, header);
+        List<List<Double>> dataSet = FileUtils.loadData(inpath, header);
         List<Double> predictions = new ArrayList<>(dataSet.size());
         for (List<Double> data : dataSet) {
             predictions.add(predict(data));
         }
-        Utils.writePredictions(predictions, outpath);
+        ModelUtils.writePredictions(predictions, outpath);
     }
 
     /**
@@ -140,7 +140,7 @@ public abstract class RegressionModel extends Model {
      * @throws Exception the exception
      */
     public Model loadDataSet(String path, boolean header) throws Exception {
-        List<List<Double>> csvData = CSVUtils.loadData(path, header);
+        List<List<Double>> csvData = FileUtils.loadData(path, header);
         numberOfExamples = csvData.size();
         if (numberOfExamples > 0) {
             numberOfVariables = csvData.get(0).size() - 1;

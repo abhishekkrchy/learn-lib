@@ -1,8 +1,5 @@
-package utils;
+package util.constants.exception;
 
-/**
- * Created by abhishek on 29/9/16.
- */
 public class ExceptionConstants {
     /**
      * The constant EMPTY_MODEL.

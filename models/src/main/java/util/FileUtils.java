@@ -1,4 +1,4 @@
-package utils;
+package util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,18 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by abhishek on 29/9/16.
- */
-public class CSVUtils {
-    /**
-     * Load data list.
-     *
-     * @param path          the path
-     * @param headerPresent the header present
-     * @return the list
-     * @throws IOException the io exception
-     */
+public class FileUtils {
     public static List<List<Double>> loadData(String path, boolean headerPresent) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
         String curr;

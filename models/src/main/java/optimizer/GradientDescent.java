@@ -5,7 +5,7 @@ import models.regression.RegressionModel;
 import optimizer.functions.Functions;
 
 import static linear.algebra.Utils.multiply;
-import static statistics.util.Statistics.meanSquaredError;
+import static linear.algebra.statistics.Statistics.meanSquaredError;
 
 public class GradientDescent {
     public static DenseVector iterate(DenseVector initial, RegressionModel regressionModel) throws Exception {

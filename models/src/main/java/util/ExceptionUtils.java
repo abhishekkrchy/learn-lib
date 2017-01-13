@@ -1,8 +1,5 @@
-package utils;
+package util;
 
-/**
- * Created by abhishek on 29/9/16.
- */
 public class ExceptionUtils {
 
     /**

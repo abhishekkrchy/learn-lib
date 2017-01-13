@@ -1,11 +1,11 @@
 package optimizer.functions;
 
-import linear.algebra.matrices.util.constants.enums.AlgebraicFunction;
-import linear.algebra.matrices.util.MarkedNode;
+import linear.algebra.util.constants.enums.AlgebraicFunction;
+import linear.algebra.util.MarkedNode;
 import linear.algebra.vectors.dense.DenseVector;
 import util.constants.enums.RegularizationFunction;
 
-import static statistics.util.Statistics.meanSquaredError;
+import static linear.algebra.statistics.Statistics.meanSquaredError;
 
 public class Functions {
 

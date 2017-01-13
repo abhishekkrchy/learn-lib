@@ -1,6 +1,6 @@
-package linear.algebra.matrices.util;
+package linear.algebra.util;
 
-import linear.algebra.matrices.util.constants.enums.AlgebraicFunction;
+import linear.algebra.util.constants.enums.AlgebraicFunction;
 
 public class MarkedNode {
     private double childNodeExponent = 1.0;

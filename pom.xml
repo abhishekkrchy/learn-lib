@@ -6,7 +6,6 @@
     <version>1.0.0</version>
     <modules>
         <module>linear-algebra</module>
-        <module>utils</module>
         <module>models</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>

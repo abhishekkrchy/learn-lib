@@ -22,10 +22,5 @@
         </plugins>
     </build>
     <dependencies>
-        <dependency>
-            <groupId>com.learn-lib</groupId>
-            <artifactId>utils</artifactId>
-            <version>1.0.0</version>
-        </dependency>
     </dependencies>
 </project>

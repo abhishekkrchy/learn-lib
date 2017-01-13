@@ -1,11 +1,10 @@
-package linear.algebra.matrices.util;
+package linear.algebra.util;
 
 import linear.algebra.Matrix;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.matrices.sparse.CRSMatrix;
 import linear.algebra.matrices.sparse.CSCMatrix;
-import utils.ExceptionConstants;
-import utils.ExceptionUtils;
+import linear.algebra.util.constants.exception.ExceptionConstants;
 
 /**
  * Utility class for matrix operations.
