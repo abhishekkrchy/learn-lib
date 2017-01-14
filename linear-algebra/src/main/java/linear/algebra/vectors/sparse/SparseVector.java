@@ -1,12 +1,14 @@
 package linear.algebra.vectors.sparse;
 
 import linear.algebra.Vector;
+import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleUnaryOperator;
+import java.util.stream.DoubleStream;
 
 /**
  * A simple sparse vector class.
@@ -19,6 +21,10 @@ public class SparseVector implements Vector {
     //TODO
     public SparseVector(double[] values) {
 
+    }
+
+    public SparseVector(DenseVector denseVector){
+        this(denseVector.stream().toArray());
     }
 
     /**
@@ -43,27 +49,18 @@ public class SparseVector implements Vector {
     }
 
     @Override
-    public void forEach(DoubleConsumer action) {
-
-    }
-
-    @Override
     public Iterator<Double> iterator() {
         return null;
-    }
-
-    @Override
-    public Vector map(DoubleUnaryOperator doubleUnaryOperator) {
-        return null;
-    }
-
-    @Override
-    public double reduce(double identity, DoubleBinaryOperator doubleUnaryOperator) {
-        return 0;
     }
 
     @Override
     public Vector slice(int fromIndex, int toIndex) {
         return null;
     }
+
+    @Override
+    public DoubleStream stream() {
+        return null;
+    }
+
 }
