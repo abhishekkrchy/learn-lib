@@ -8,13 +8,21 @@ import java.util.stream.DoubleStream;
 
 import static java.util.Arrays.copyOfRange;
 
-
 /**
  * A simple dense vector class.
+ * This class in abstraction for
+ * a double array supporting
+ * various useful methods.
  */
 public class DenseVector implements Vector {
     private double[] values;
 
+    /**
+     * Instantiates a new Dense vector.
+     *
+     * @param values the values(array of doubles)
+     *               contained within the class
+     */
     public DenseVector(double[] values) {
         this.values = values;
     }
@@ -24,6 +32,7 @@ public class DenseVector implements Vector {
         return values.length;
     }
 
+    @Override
     public double value(int index) {
         return values[index];
     }
