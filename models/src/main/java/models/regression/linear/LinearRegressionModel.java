@@ -3,8 +3,10 @@ package models.regression.linear;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import models.regression.RegressionModel;
-import optimizer.GradientDescent;
+import optimizer.Optimizers;
+import optimizer.grad.desc.GradientDescent;
 import linear.algebra.statistics.Statistics;
+import util.constants.enums.Optimizer;
 
 
 public class LinearRegressionModel extends RegressionModel {
@@ -31,7 +33,7 @@ public class LinearRegressionModel extends RegressionModel {
     }
     private DenseVector gradientDescent(DenseVector entryPoint){
         try {
-            GradientDescent.iterate(entryPoint,this);
+            Optimizers.optimize.apply(optimizerType).apply(entryPoint,this);
         } catch (Exception e) {
             e.printStackTrace();
         }

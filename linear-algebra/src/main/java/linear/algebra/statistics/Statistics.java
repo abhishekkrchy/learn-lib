@@ -1,13 +1,10 @@
 package linear.algebra.statistics;
 
-import linear.algebra.util.constants.enums.AlgebraicFunction;
-import linear.algebra.util.MarkedNode;
 import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.Random;
 
 public class Statistics {
-
     public static DenseVector getNormalDistributionSamples(int numberOfSamples) {
         Random random = new Random(System.currentTimeMillis());
         double[] normalDistribution = new double[numberOfSamples];
