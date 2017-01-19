@@ -3,13 +3,13 @@ package optimizer.grad.desc;
 import linear.algebra.statistics.errors.Errors;
 import linear.algebra.util.Vectors;
 import linear.algebra.vectors.dense.DenseVector;
-import solvers.regression.RegressionModel;
+import solvers.regression.RegressionSolver;
 import optimizer.functions.Functions;
 
 import static linear.algebra.Utils.multiply;
 
 public class GradientDescent {
-    public static DenseVector iterate(DenseVector initial, RegressionModel regressionModel){
+    public static DenseVector iterate(DenseVector initial, RegressionSolver regressionModel){
         int iterations = 0;
         double[] errors = new double[regressionModel.getMaxIterations()];
         try {

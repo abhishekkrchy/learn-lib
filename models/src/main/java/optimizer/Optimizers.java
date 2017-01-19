@@ -1,7 +1,7 @@
 package optimizer;
 
 import linear.algebra.vectors.dense.DenseVector;
-import solvers.regression.RegressionModel;
+import solvers.regression.RegressionSolver;
 import optimizer.grad.desc.GradientDescent;
 import util.constants.enums.Optimizer;
 
@@ -9,8 +9,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Optimizers {
-    public static Function<Optimizer, BiFunction<DenseVector, RegressionModel, DenseVector>> optimize =
-            optimizer -> (BiFunction<DenseVector, RegressionModel, DenseVector>) (denseVector, regressionModel) -> {
+    public static Function<Optimizer, BiFunction<DenseVector, RegressionSolver, DenseVector>> optimize =
+            optimizer -> (BiFunction<DenseVector, RegressionSolver, DenseVector>) (denseVector, regressionModel) -> {
                 switch (optimizer) {
                     case GRADIENT_DESCENT:
                     default:

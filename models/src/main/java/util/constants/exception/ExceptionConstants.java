@@ -4,7 +4,7 @@ public class ExceptionConstants {
     /**
      * The constant EMPTY_MODEL.
      */
-    public static String EMPTY_MODEL = "Model found empty.";
+    public static String EMPTY_MODEL = "Solver found empty.";
     /**
      * The constant EMPTY_CSV_DATA.
      */
@@ -16,6 +16,6 @@ public class ExceptionConstants {
     /**
      * The constant MODEL_NOT_BUILT.
      */
-    public static String MODEL_NOT_BUILT = "Model not evaluated till now.";
+    public static String MODEL_NOT_BUILT = "Solver not evaluated till now.";
 
 }

@@ -1,20 +1,20 @@
 package solvers.regression.logistic;
 
-import solvers.Model;
-import solvers.regression.RegressionModel;
+import solvers.Solver;
+import solvers.regression.RegressionSolver;
 
 /**
  * Created by abhishek on 29/9/16.
  */
-public class LogisticRegressionModel extends RegressionModel {
+public class LogisticRegressionSolver extends RegressionSolver {
 
     @Override
-    public Model build() {
+    public Solver build() {
         return null;
     }
 
     @Override
-    public Model load(String path) {
+    public Solver load(String path) {
         return null;
     }
 

@@ -2,17 +2,17 @@ package solvers.regression;
 
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.util.constants.enums.ErrorType;
+import solvers.regression.logistic.LogisticRegressionSolver;
 import util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.dense.DenseVector;
-import solvers.Model;
+import solvers.Solver;
 import util.ExceptionUtils;
 import util.FileUtils;
 import util.ModelUtils;
 import util.constants.enums.Optimizer;
 import util.constants.enums.Regularizer;
 import util.constants.enums.ModelType;
-import solvers.regression.linear.LinearRegressionModel;
-import solvers.regression.logistic.LogisticRegressionModel;
+import solvers.regression.linear.LinearRegressionSolver;
 
 import java.util.*;
 
@@ -22,7 +22,7 @@ import static util.constants.enums.Regularizer.NONE;
 /**
  * Created by abhishek on 29/9/16.
  */
-public abstract class RegressionModel extends Model {
+public abstract class RegressionSolver extends Solver {
     protected int numberOfVariables;
     protected int numberOfExamples;
     protected double[][] dataSet;
@@ -44,7 +44,7 @@ public abstract class RegressionModel extends Model {
     /**
      * Instantiates a new Regression model.
      */
-    public RegressionModel() {
+    public RegressionSolver() {
     }
 
     /**
@@ -54,12 +54,12 @@ public abstract class RegressionModel extends Model {
      * @return the model instance
      * @throws Exception the exception
      */
-    public static Model getModelInstance(ModelType modelType) throws Exception {
+    public static Solver getModelInstance(ModelType modelType) throws Exception {
         switch (modelType) {
             case LINEAR_REGRESSION:
-                return new LinearRegressionModel();
+                return new LinearRegressionSolver();
             case LOGISTIC_REGRESSION:
-                return new LogisticRegressionModel();
+                return new LogisticRegressionSolver();
             default:
                 throw ExceptionUtils.getException(ExceptionConstants.EMPTY_MODEL);
         }
@@ -141,7 +141,7 @@ public abstract class RegressionModel extends Model {
      * @param header the header
      * @throws Exception the exception
      */
-    public Model loadDataSet(String path, boolean header) throws Exception {
+    public Solver loadDataSet(String path, boolean header) throws Exception {
         List<List<Double>> csvData = FileUtils.loadData(path, header);
         numberOfExamples = csvData.size();
         if (numberOfExamples > 0) {

@@ -5,17 +5,17 @@ import java.util.List;
 /**
  * Created by abhishek on 29/9/16.
  */
-public abstract class Model {
+public abstract class Solver {
 
     /**
-     * If Model built.
+     * If Solver built.
      */
     protected boolean modelBuilt;
 
     /**
-     * Instantiates a new Model.
+     * Instantiates a new Solver.
      */
-    protected Model() {
+    protected Solver() {
     }
 
     /**
@@ -28,7 +28,7 @@ public abstract class Model {
     /**
      * Build.
      */
-    public abstract Model build();
+    public abstract Solver build();
 
     /**
      * Predict double.
@@ -43,14 +43,14 @@ public abstract class Model {
         predict(inpath,outpath,false);
     }
     public abstract void predict(String inpath, String outpath,boolean header) throws Exception;
-    public abstract Model loadDataSet(String path, boolean header) throws Exception;
+    public abstract Solver loadDataSet(String path, boolean header) throws Exception;
 
     /**
      * Load.
      *
      * @param path the path
      */
-    public abstract Model load(String path);
+    public abstract Solver load(String path);
 
     /**
      * Export.

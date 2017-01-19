@@ -1,18 +1,18 @@
 package solvers.regression.linear;
 
 import linear.algebra.vectors.dense.DenseVector;
-import solvers.Model;
-import solvers.regression.RegressionModel;
+import solvers.Solver;
+import solvers.regression.RegressionSolver;
 import optimizer.Optimizers;
 import linear.algebra.statistics.Statistics;
 
 
-public class LinearRegressionModel extends RegressionModel {
-    public LinearRegressionModel() {
+public class LinearRegressionSolver extends RegressionSolver {
+    public LinearRegressionSolver() {
     }
 
     @Override
-    public Model build() {
+    public Solver build() {
         assignTrainAndTest();
         DenseVector entryPoint = Statistics.getNormalDistributionSamples(numberOfVariables+1);
         gradientDescent(entryPoint);
@@ -21,7 +21,7 @@ public class LinearRegressionModel extends RegressionModel {
     }
 
     @Override
-    public Model load(String path) {
+    public Solver load(String path) {
         return this;
     }
 
