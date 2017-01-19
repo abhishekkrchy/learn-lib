@@ -1,6 +1,7 @@
 package models.regression;
 
 import linear.algebra.matrices.dense.DenseMatrix;
+import linear.algebra.util.constants.enums.ErrorType;
 import util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
@@ -8,7 +9,7 @@ import util.ExceptionUtils;
 import util.FileUtils;
 import util.ModelUtils;
 import util.constants.enums.Optimizer;
-import util.constants.enums.RegularizationFunction;
+import util.constants.enums.Regularizer;
 import util.constants.enums.ModelType;
 import models.regression.linear.LinearRegressionModel;
 import models.regression.logistic.LogisticRegressionModel;
@@ -16,7 +17,7 @@ import models.regression.logistic.LogisticRegressionModel;
 import java.util.*;
 
 import static util.constants.enums.Optimizer.GRADIENT_DESCENT;
-import static util.constants.enums.RegularizationFunction.NONE;
+import static util.constants.enums.Regularizer.NONE;
 
 /**
  * Created by abhishek on 29/9/16.
@@ -31,13 +32,14 @@ public abstract class RegressionModel extends Model {
     protected double[] testingY;
     protected double[] factors;
     protected Optimizer optimizerType = GRADIENT_DESCENT;
-    protected RegularizationFunction regularizationFunction = NONE;
+    protected Regularizer regularizer = NONE;
     protected int maxIterations = 100000;
     protected double learningRate = 0.001;
     protected double regularizationCoefficient = 0.01;
     protected double minDescentLimit = 0.0001;
     protected Set<Integer> testIndexes = new HashSet<>();
     protected double testingDataPercent = 25.0;
+    protected ErrorType errorType;
 
     /**
      * Instantiates a new Regression model.
@@ -204,12 +206,12 @@ public abstract class RegressionModel extends Model {
         this.optimizerType = optimizerType;
     }
 
-    public RegularizationFunction getRegularizationFunction() {
-        return regularizationFunction;
+    public Regularizer getRegularizer() {
+        return regularizer;
     }
 
-    public void setRegularizationFunction(RegularizationFunction regularizationFunction) {
-        this.regularizationFunction = regularizationFunction;
+    public void setRegularizer(Regularizer regularizer) {
+        this.regularizer = regularizer;
     }
 
     public int getMaxIterations() {
@@ -274,5 +276,13 @@ public abstract class RegressionModel extends Model {
 
     public void setTestingY(double[] testingY) {
         this.testingY = testingY;
+    }
+
+    public ErrorType getErrorType() {
+        return errorType;
+    }
+
+    public void setErrorType(ErrorType errorType) {
+        this.errorType = errorType;
     }
 }

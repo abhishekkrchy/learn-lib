@@ -1,30 +1,20 @@
 package optimizer.functions;
 
-import linear.algebra.util.constants.enums.AlgebraicFunction;
+import linear.algebra.statistics.errors.Errors;
 import linear.algebra.util.MarkedNode;
+import linear.algebra.util.constants.enums.AlgebraicFunction;
+import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
-import util.constants.enums.RegularizationFunction;
-
-import static linear.algebra.statistics.Statistics.meanSquaredError;
+import util.constants.enums.Regularizer;
 
 public class Functions {
-
-    public static MarkedNode lossFunction(DenseVector denseVector1, DenseVector denseVector2, RegularizationFunction regularizationFunction, double regularizationCoefficient, int varPos) {
-        MarkedNode loss = meanSquaredError(denseVector1, denseVector2, varPos);
-        if (regularizationFunction.equals(RegularizationFunction.L1)) {
-            double cons = 0;
-            cons += regularizationCoefficient * (denseVector2.slice(0, denseVector2.size()).stream().map(Math::abs).reduce(0.0,Double::sum) - Math.abs(denseVector2.value(varPos)));
-            MarkedNode innerNode = new MarkedNode(1, cons);
-            loss.setChildNode(innerNode);
-            loss.setChildFunctionalRelation(AlgebraicFunction.ADD);
-        } else if (regularizationFunction.equals(RegularizationFunction.L2)) {
-            double cons = 0;
-            cons += (0.5 * regularizationCoefficient) *
-                    (((denseVector2.slice(0, denseVector2.size()).stream().map(x -> Math.pow(x, 2)))
-                            .reduce(0.0,Double::sum) - Math.pow(denseVector2.value(varPos), 2.0)) / denseVector2.size() - 1);
-            MarkedNode innerNode = new MarkedNode(1, cons);
-            loss.setChildNode(innerNode);
-            loss.setChildFunctionalRelation(AlgebraicFunction.ADD);
+    public static MarkedNode lossFunction(DenseVector denseVector1, DenseVector denseVector2, Regularizer regularizer, double regularizationCoefficient, ErrorType errorType, int varPos) {
+        MarkedNode loss = Errors.MARKED_ERROR_FUNCTION.apply(errorType)
+                .apply(varPos).apply(denseVector1, denseVector2);
+        MarkedNode innerNode = Regularizers.regularize(denseVector2, regularizer, regularizationCoefficient, varPos);
+        loss.setChildNode(innerNode);
+        loss.setChildFunctionalRelation(AlgebraicFunction.ADD);
+        if (regularizer.equals(Regularizer.L1)) {
             loss.setChildNodeMultiplicand(denseVector2.size() - 1);
         }
         return loss;
