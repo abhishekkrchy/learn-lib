@@ -1,7 +1,7 @@
-package models.regression.logistic;
+package solvers.regression.logistic;
 
-import models.Model;
-import models.regression.RegressionModel;
+import solvers.Model;
+import solvers.regression.RegressionModel;
 
 /**
  * Created by abhishek on 29/9/16.

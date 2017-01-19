@@ -1,4 +1,4 @@
-package models;
+package solvers;
 
 import java.util.List;
 

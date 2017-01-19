@@ -1,7 +1,7 @@
 package optimizer;
 
 import linear.algebra.vectors.dense.DenseVector;
-import models.regression.RegressionModel;
+import solvers.regression.RegressionModel;
 import optimizer.grad.desc.GradientDescent;
 import util.constants.enums.Optimizer;
 

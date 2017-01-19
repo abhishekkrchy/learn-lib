@@ -1,12 +1,10 @@
-package models.regression.linear;
+package solvers.regression.linear;
 
 import linear.algebra.vectors.dense.DenseVector;
-import models.Model;
-import models.regression.RegressionModel;
+import solvers.Model;
+import solvers.regression.RegressionModel;
 import optimizer.Optimizers;
-import optimizer.grad.desc.GradientDescent;
 import linear.algebra.statistics.Statistics;
-import util.constants.enums.Optimizer;
 
 
 public class LinearRegressionModel extends RegressionModel {

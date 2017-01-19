@@ -2,9 +2,8 @@ package optimizer.grad.desc;
 
 import linear.algebra.statistics.errors.Errors;
 import linear.algebra.util.Vectors;
-import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
-import models.regression.RegressionModel;
+import solvers.regression.RegressionModel;
 import optimizer.functions.Functions;
 
 import static linear.algebra.Utils.multiply;

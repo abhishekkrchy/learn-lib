@@ -1,18 +1,18 @@
-package models.regression;
+package solvers.regression;
 
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.util.constants.enums.ErrorType;
 import util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.dense.DenseVector;
-import models.Model;
+import solvers.Model;
 import util.ExceptionUtils;
 import util.FileUtils;
 import util.ModelUtils;
 import util.constants.enums.Optimizer;
 import util.constants.enums.Regularizer;
 import util.constants.enums.ModelType;
-import models.regression.linear.LinearRegressionModel;
-import models.regression.logistic.LogisticRegressionModel;
+import solvers.regression.linear.LinearRegressionModel;
+import solvers.regression.logistic.LogisticRegressionModel;
 
 import java.util.*;
 
