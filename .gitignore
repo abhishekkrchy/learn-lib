@@ -14,5 +14,5 @@ hs_err_pid*
 .idea/
 *.iml
 linear-algebra/target/
-models/target/
+machine-learning/target/
 

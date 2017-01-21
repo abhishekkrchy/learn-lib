@@ -1,13 +1,12 @@
 package solvers.regression.linear;
 
 import linear.algebra.matrices.dense.DenseMatrix;
+import linear.algebra.statistics.Statistics;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import optimizer.grad.desc.GradientDescentOptimizer;
 import solvers.Solver;
 import solvers.regression.RegressionSolver;
-import optimizer.Optimizers;
-import linear.algebra.statistics.Statistics;
 
 
 public class LinearRegressionSolver extends RegressionSolver {
