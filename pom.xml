@@ -6,7 +6,7 @@
     <version>1.0.0</version>
     <modules>
         <module>linear-algebra</module>
-        <module>models</module>
+        <module>machine-learning</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
