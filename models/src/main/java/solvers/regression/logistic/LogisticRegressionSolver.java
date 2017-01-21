@@ -1,5 +1,6 @@
 package solvers.regression.logistic;
 
+import models.Model;
 import solvers.Solver;
 import solvers.regression.RegressionSolver;
 
@@ -9,17 +10,12 @@ import solvers.regression.RegressionSolver;
 public class LogisticRegressionSolver extends RegressionSolver {
 
     @Override
-    public Solver build() {
+    public Solver solve() {
         return null;
     }
 
     @Override
-    public Solver load(String path) {
+    public Model getModel() {
         return null;
-    }
-
-    @Override
-    public void export(String path) {
-
     }
 }

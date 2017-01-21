@@ -1,6 +1,9 @@
 package solvers.regression.linear;
 
+import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.vectors.dense.DenseVector;
+import models.Model;
+import optimizer.grad.desc.GradientDescentOptimizer;
 import solvers.Solver;
 import solvers.regression.RegressionSolver;
 import optimizer.Optimizers;
@@ -12,26 +15,22 @@ public class LinearRegressionSolver extends RegressionSolver {
     }
 
     @Override
-    public Solver build() {
+    public Solver solve() {
         assignTrainAndTest();
-        DenseVector entryPoint = Statistics.getNormalDistributionSamples(numberOfVariables+1);
-        gradientDescent(entryPoint);
-        modelBuilt = true;
+        DenseVector entryPoint = Statistics.getNormalDistributionSamples(numberOfVariables + 1);
+        model = gradientDescent(entryPoint);
         return this;
     }
 
     @Override
-    public Solver load(String path) {
-        return this;
+    public Model getModel() {
+        return model;
     }
 
-    @Override
-    public void export(String path) {
-
-    }
-    private DenseVector gradientDescent(DenseVector entryPoint){
+    private Model gradientDescent(DenseVector entryPoint) {
         try {
-            Optimizers.optimize.apply(optimizerType).apply(entryPoint,this);
+            optimizer=new GradientDescentOptimizer(entryPoint,maxIterations,new DenseMatrix(trainingX),errorType,new DenseVector(trainingY),regularizer,regularizationCoefficient,learningRate,minDescentLimit);
+            optimizer.optimize();
         } catch (Exception e) {
             e.printStackTrace();
         }

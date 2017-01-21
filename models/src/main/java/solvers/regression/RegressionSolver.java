@@ -2,21 +2,22 @@ package solvers.regression;
 
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.util.constants.enums.ErrorType;
+import models.Model;
+import optimizer.Optimizer;
 import solvers.regression.logistic.LogisticRegressionSolver;
 import util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.dense.DenseVector;
 import solvers.Solver;
 import util.ExceptionUtils;
 import util.FileUtils;
-import util.ModelUtils;
-import util.constants.enums.Optimizer;
+import util.constants.enums.OptimizerType;
 import util.constants.enums.Regularizer;
 import util.constants.enums.ModelType;
 import solvers.regression.linear.LinearRegressionSolver;
 
 import java.util.*;
 
-import static util.constants.enums.Optimizer.GRADIENT_DESCENT;
+import static util.constants.enums.OptimizerType.GRADIENT_DESCENT;
 import static util.constants.enums.Regularizer.NONE;
 
 /**
@@ -31,7 +32,7 @@ public abstract class RegressionSolver extends Solver {
     protected double[][] testingX;
     protected double[] testingY;
     protected double[] factors;
-    protected Optimizer optimizerType = GRADIENT_DESCENT;
+    protected OptimizerType optimizerTypeType = GRADIENT_DESCENT;
     protected Regularizer regularizer = NONE;
     protected int maxIterations = 100000;
     protected double learningRate = 0.001;
@@ -40,6 +41,8 @@ public abstract class RegressionSolver extends Solver {
     protected Set<Integer> testIndexes = new HashSet<>();
     protected double testingDataPercent = 25.0;
     protected ErrorType errorType;
+    protected Model model;
+    protected Optimizer optimizer;
 
     /**
      * Instantiates a new Regression model.
@@ -88,51 +91,6 @@ public abstract class RegressionSolver extends Solver {
     }
 
 
-    public double predict(List<Double> values) throws Exception {
-        if (!modelBuilt)
-            throw ExceptionUtils.getException(ExceptionConstants.MODEL_NOT_BUILT);
-        double output = 0.0;
-        int i = 0;
-        for (double factor : factors) {
-            output += factor * values.get(i++);
-        }
-        return output;
-    }
-
-    /**
-     * Predict double.
-     *
-     * @param values the values
-     * @return the double
-     * @throws Exception the exception
-     */
-    public double predict(double[] values) throws Exception {
-        if (!modelBuilt)
-            throw ExceptionUtils.getException(ExceptionConstants.MODEL_NOT_BUILT);
-        double output = 0.0;
-        int i = 0;
-        for (double factor : factors) {
-            output += factor * values[i++];
-        }
-        return output;
-    }
-
-    /**
-     * Predict.
-     *
-     * @param inpath  the inpath
-     * @param outpath the outpath
-     * @param header  the header
-     * @throws Exception the exception
-     */
-    public void predict(String inpath, String outpath, boolean header) throws Exception {
-        List<List<Double>> dataSet = FileUtils.loadData(inpath, header);
-        List<Double> predictions = new ArrayList<>(dataSet.size());
-        for (List<Double> data : dataSet) {
-            predictions.add(predict(data));
-        }
-        ModelUtils.writePredictions(predictions, outpath);
-    }
 
     /**
      * Load data set.
@@ -198,12 +156,12 @@ public abstract class RegressionSolver extends Solver {
         this.factors = factors;
     }
 
-    public Optimizer getOptimizerType() {
-        return optimizerType;
+    public OptimizerType getOptimizerTypeType() {
+        return optimizerTypeType;
     }
 
-    public void setOptimizerType(Optimizer optimizerType) {
-        this.optimizerType = optimizerType;
+    public void setOptimizerTypeType(OptimizerType optimizerTypeType) {
+        this.optimizerTypeType = optimizerTypeType;
     }
 
     public Regularizer getRegularizer() {
