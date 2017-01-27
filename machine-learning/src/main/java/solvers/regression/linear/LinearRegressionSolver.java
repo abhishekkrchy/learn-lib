@@ -9,7 +9,13 @@ import solvers.Solver;
 import solvers.regression.RegressionSolver;
 
 
+/**
+ * The type Linear regression solver.
+ */
 public class LinearRegressionSolver extends RegressionSolver {
+    /**
+     * Instantiates a new Linear regression solver.
+     */
     public LinearRegressionSolver() {
     }
 
@@ -26,6 +32,7 @@ public class LinearRegressionSolver extends RegressionSolver {
         return model;
     }
 
+    //TODO :: needs to be moved to superclass?
     private Model gradientDescent(DenseVector entryPoint) {
         try {
             optimizer=new GradientDescentOptimizer(entryPoint,maxIterations,new DenseMatrix(trainingX),errorType,new DenseVector(trainingY),regularizer,regularizationCoefficient,learningRate,minDescentLimit);

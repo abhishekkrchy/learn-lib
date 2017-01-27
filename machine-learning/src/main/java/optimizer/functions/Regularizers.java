@@ -4,7 +4,20 @@ import linear.algebra.util.MarkedNode;
 import linear.algebra.vectors.dense.DenseVector;
 import util.constants.enums.Regularizer;
 
+/**
+ * The type Regularizers.
+ */
 public class Regularizers {
+    /**
+     * Regularize the given denseVector based
+     * on {@link Regularizer} regularizer.
+     *
+     * @param denseVector2              the dense vector 2
+     * @param regularizer               the regularizer
+     * @param regularizationCoefficient the regularization coefficient
+     * @param varPos                    the var pos
+     * @return the marked node
+     */
     public static MarkedNode regularize(DenseVector denseVector2, Regularizer regularizer, double regularizationCoefficient, int varPos) {
         double constant = 0;
         switch (regularizer) {
