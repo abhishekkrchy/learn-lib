@@ -5,6 +5,6 @@
 implementation of various machine-learning algorithms.
 </p>
 <p>
-Currently doing in my free time.
+Currently in very early stage,doing in my free time.
 Contributions are always welcome so that we can make things faster.
 </p>
