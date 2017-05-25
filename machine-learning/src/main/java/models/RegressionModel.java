@@ -50,4 +50,28 @@ public class RegressionModel implements Model {
     public void build() {
 
     }
+
+    public boolean isModelBuilt() {
+        return modelBuilt;
+    }
+
+    public void setModelBuilt(boolean modelBuilt) {
+        this.modelBuilt = modelBuilt;
+    }
+
+    public DenseVector getFactors() {
+        return factors;
+    }
+
+    public void setFactors(DenseVector factors) {
+        this.factors = factors;
+    }
+
+    public double getIntercept() {
+        return intercept;
+    }
+
+    public void setIntercept(double intercept) {
+        this.intercept = intercept;
+    }
 }

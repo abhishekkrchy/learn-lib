@@ -170,7 +170,7 @@ public abstract class RegressionSolver extends Solver {
         List<List<Double>> csvData = FileUtils.loadData(path, header);
         numberOfExamples = csvData.size();
         if (numberOfExamples > 0) {
-            numberOfVariables = csvData.get(0).size() - 1;
+            numberOfVariables = csvData.get(0).size();
             if (numberOfVariables == 0)
                 throw ExceptionUtils.getException(ExceptionConstants.EMPTY_CSV_DATA);
         } else {
@@ -178,8 +178,9 @@ public abstract class RegressionSolver extends Solver {
         }
         dataSet = new double[numberOfExamples][numberOfVariables];
         for (int i = 0; i < numberOfExamples; i++) {
-            if (csvData.get(i).size() != numberOfVariables)
+            if (csvData.get(i).size() != numberOfVariables) {
                 throw ExceptionUtils.getException(ExceptionConstants.IMPROPER_CSV_DATA);
+            }
             for (int j = 0; j < numberOfVariables; j++) {
                 dataSet[i][j] = csvData.get(i).get(j);
             }
@@ -204,6 +205,8 @@ public abstract class RegressionSolver extends Solver {
         }
         trainingX = new double[numberOfExamples - numberOfTestRows][numberOfVariables - 1];
         trainingY = new double[numberOfExamples - numberOfTestRows];
+        testingX = new double[numberOfTestRows][numberOfVariables-1];
+        testingY = new double[numberOfTestRows];
         int testIndex = 0;
         int trainIndex = 0;
         for (int i = 0; i < dataSet.length; i++) {
@@ -435,4 +438,5 @@ public abstract class RegressionSolver extends Solver {
     public void setErrorType(ErrorType errorType) {
         this.errorType = errorType;
     }
+
 }

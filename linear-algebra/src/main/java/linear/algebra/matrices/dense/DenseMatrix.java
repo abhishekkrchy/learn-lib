@@ -3,6 +3,8 @@ package linear.algebra.matrices.dense;
 import linear.algebra.Matrix;
 import linear.algebra.vectors.dense.DenseVector;
 
+import java.util.Arrays;
+
 public class DenseMatrix extends Matrix {
     private double[][] values;
 
@@ -61,6 +63,5 @@ public class DenseMatrix extends Matrix {
         }
         return new DenseVector(column);
     }
-
 
 }

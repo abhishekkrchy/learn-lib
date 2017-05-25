@@ -43,4 +43,6 @@ public abstract class Solver {
      * @return the model
      */
     public abstract Model getModel();
+
+    public abstract void predict(String opFilePath,boolean headers) throws Exception;
 }

@@ -42,16 +42,11 @@ public class Errors {
      * applied returns a {@link MarkedNode} which is the
      * calculated error.
      */
-    public static Function<ErrorType, Function<Integer, BiFunction<DenseVector, DenseVector, MarkedNode>>> MARKED_ERROR_FUNCTION = new Function<ErrorType, Function<Integer, BiFunction<DenseVector, DenseVector, MarkedNode>>>() {
-        @Override
-        public Function<Integer, BiFunction<DenseVector, DenseVector, MarkedNode>> apply(ErrorType errorType) {
-            return integer -> (BiFunction<DenseVector, DenseVector, MarkedNode>) (denseVector, denseVector2) -> {
-                switch (errorType) {
-                    case MSE:
-                    default:
-                        return MeanSquaredError.error(denseVector, denseVector2, integer);
-                }
-            };
+    public static Function<ErrorType, Function<Integer, BiFunction<DenseVector, DenseVector, MarkedNode>>> MARKED_ERROR_FUNCTION = errorType -> integer -> (BiFunction<DenseVector, DenseVector, MarkedNode>) (denseVector, denseVector2) -> {
+        switch (errorType) {
+            case MSE:
+            default:
+                return MeanSquaredError.error(denseVector, denseVector2, integer);
         }
     };
 

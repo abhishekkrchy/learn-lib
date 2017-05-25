@@ -5,6 +5,8 @@ import linear.algebra.statistics.errors.Errors;
 import linear.algebra.util.Vectors;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
+import models.Model;
+import models.RegressionModel;
 import optimizer.Optimizer;
 import optimizer.functions.Functions;
 import util.constants.enums.Regularizer;
@@ -21,7 +23,6 @@ public class GradientDescentOptimizer implements Optimizer{
     private double regularizationCoefficient;
     private double learningRate;
     private double minDescentLimit;
-
     private DenseVector errorVector;
 
     public GradientDescentOptimizer(DenseVector initial, int maxIterations, DenseMatrix trainingX, ErrorType errorType, DenseVector trainingY, Regularizer regularizer, double regularizationCoefficient, double learningRate, double minDescentLimit) {
@@ -37,29 +38,39 @@ public class GradientDescentOptimizer implements Optimizer{
     }
 
     @Override
-    public void optimize() {
+    public Model optimize() {
         int iterations = 0;
         double[] errors = new double[maxIterations];
         try {
+            System.out.println(errorType + "    huhuh");
             errors[iterations] = Errors.MARKED_ERROR_FUNCTION.apply(errorType).apply(0)
-                    .apply(Vectors.toDenseVector(multiply(trainingX, initial).stream().map(x -> x + initial.value(0))),
+                    .apply(Vectors.toDenseVector(multiply(trainingX, initial.slice(1, initial.size())).stream().map(x -> x + initial.value(1))),
                             trainingY)
-                    .calc(initial.value(0));
+                    .calc(initial.value(1));
+            DenseVector denseVector = initial;
             while (iterations < maxIterations) {
-                double changeFactor = Functions.lossFunction(Vectors.toDenseVector(multiply(trainingX, initial).stream().map(x -> x + initial.value(0))),
-                        trainingY, regularizer, regularizationCoefficient, errorType, 0)
-                        .derivative(initial.value(0));
-                DenseVector denseVector = Vectors.toDenseVector(initial.stream().map(x -> x - (changeFactor * learningRate)));
-                errors[++iterations] = Errors.MARKED_ERROR_FUNCTION.apply(errorType).apply(0)
-                        .apply(Vectors.toDenseVector(multiply(trainingX, denseVector).stream().map(x -> x + denseVector.value(0))),
+                double val = denseVector.value(0);
+                double val2 = denseVector.value(1);
+                double changeFactor = Functions.lossFunction(Vectors.toDenseVector(multiply(trainingX, denseVector.slice(1, denseVector.size())).stream().map(x -> x + val)),
+                        trainingY, regularizer, regularizationCoefficient, errorType, 1)
+                        .derivative(initial.value(1));
+                denseVector = Vectors.toDenseVector(denseVector.stream().map(x -> x - (changeFactor * learningRate)));
+
+                errors[++iterations] = Errors.MARKED_ERROR_FUNCTION.apply(errorType).apply(1)
+                        .apply(Vectors.toDenseVector(multiply(trainingX, denseVector.slice(1,denseVector.size())).stream().map(x -> x + val)),
                                 trainingY)
-                        .calc(denseVector.value(0));
+                        .calc(denseVector.value(1));
                 if (Math.abs(errors[iterations] - errors[iterations - 1]) <= minDescentLimit)
                     break;
             }
-            errorVector=new DenseVector(errors);
-        }catch (Exception e){
+            errorVector = new DenseVector(errors);
+            RegressionModel model=new RegressionModel();
+            model.setFactors(denseVector.slice(1,denseVector.size()));
+            model.setIntercept(denseVector.value(0));
+            return model;
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 }

@@ -18,4 +18,9 @@ public class LogisticRegressionSolver extends RegressionSolver {
     public Model getModel() {
         return null;
     }
+
+    @Override
+    public void predict(String opFilePath, boolean headers) throws Exception {
+
+    }
 }

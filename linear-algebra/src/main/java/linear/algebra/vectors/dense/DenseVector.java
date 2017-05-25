@@ -64,5 +64,4 @@ public class DenseVector implements Vector {
         return Arrays.stream(values);
     }
 
-
 }

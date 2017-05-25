@@ -45,7 +45,7 @@ class MeanSquaredError {
         }
         markedNode.setAdditiveConstant(total / denseVector1.size());
         markedNode.setChildNodeExponent(2.0);
-        markedNode.setChildNodeMultiplicand(1 / (denseVector1.size()));
+        markedNode.setChildNodeMultiplicand(1.0 / (denseVector1.size()));
         markedNode.setChildFunctionalRelation(AlgebraicFunction.ADD);
         return markedNode;
     }

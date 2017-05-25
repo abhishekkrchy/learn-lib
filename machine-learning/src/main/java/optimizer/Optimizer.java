@@ -1,5 +1,7 @@
 package optimizer;
 
+import models.Model;
+
 /**
  * The Optimizer interface.
  */
@@ -9,5 +11,5 @@ public interface Optimizer {
      * Any class implementing {@link Optimizer}
      * should override it.
      */
-    void optimize();
+    Model optimize();
 }
