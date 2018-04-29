@@ -1,12 +1,17 @@
 package linear.algebra;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.DoubleStream;
 
 /**
  * A simple vector class.
  */
-public interface Vector {
+public abstract class Vector {
+
+    private static final String DEFAULT_INDENT_STRING = "  ";
 
     /**
      * Method for getting the size
@@ -17,7 +22,7 @@ public interface Vector {
      * number of values in this
      * vector
      */
-    int size();
+    public abstract int size();
 
     /**
      * Method for getting the value
@@ -28,7 +33,7 @@ public interface Vector {
      * @return the double value associated
      * with that index.
      */
-    double value(int index);
+    public abstract double value(int index);
 
     /**
      * Method for getting {@link Iterator} of
@@ -37,7 +42,7 @@ public interface Vector {
      *
      * @return the iterator
      */
-    Iterator<Double> iterator();
+    public abstract Iterator<Double> iterator();
 
     /**
      * Method to slice vector from
@@ -47,7 +52,7 @@ public interface Vector {
      * @return the new {@link Vector}
      * created using the sliced values.
      */
-    Vector slice(int fromIndex, int toIndex);
+    public abstract Vector slice(int fromIndex, int toIndex);
 
     /**
      * Method to generate a primitive stream
@@ -55,5 +60,40 @@ public interface Vector {
      * and @return the {@link DoubleStream}
      * generated.
      */
-    DoubleStream stream();
+    public abstract DoubleStream stream();
+
+    @Override
+    public int hashCode() {
+        List<Double> valuesList = new ArrayList<>();
+        for (int i = 0; i < size(); i++) {
+            valuesList.add(value(i));
+        }
+        return Arrays.hashCode(valuesList.toArray(new Double[0]));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Vector)) {
+            return false;
+        }
+        Vector other = (Vector) obj;
+        if (size() != other.size()) {
+            return false;
+        }
+        for (int i = 0; i < size(); i++) {
+            if (value(i) != other.value(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder vectorString = new StringBuilder();
+        for (int i = 0; i < size(); i++) {
+            vectorString.append(value(i)).append(DEFAULT_INDENT_STRING);
+        }
+        return vectorString.toString();
+    }
 }

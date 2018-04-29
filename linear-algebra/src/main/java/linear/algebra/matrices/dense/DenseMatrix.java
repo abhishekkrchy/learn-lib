@@ -42,7 +42,7 @@ public class DenseMatrix extends Matrix {
     }
 
     @Override
-    public Matrix transpose() {
+    public DenseMatrix transpose() {
         double[][] transposed = new double[values[0].length][values.length];
         for (int i = 0; i < values.length; i++) {
             for (int j = 0; j < values[i].length; j++) {
@@ -59,7 +59,7 @@ public class DenseMatrix extends Matrix {
     public DenseVector getColumn(int index) {
         double[] column = new double[rows];
         for (int i = 0; i < rows; i++) {
-            column[i] = value(index,i);
+            column[i] = value(i,index);
         }
         return new DenseVector(column);
     }

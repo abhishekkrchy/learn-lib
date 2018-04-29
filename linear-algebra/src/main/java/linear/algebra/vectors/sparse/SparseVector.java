@@ -10,7 +10,7 @@ import java.util.stream.DoubleStream;
 /**
  * A simple sparse vector class.
  */
-public class SparseVector implements Vector {
+public class SparseVector extends Vector {
     private double[] values;
     private int[] indices;
 

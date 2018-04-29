@@ -1,6 +1,8 @@
 package linear.algebra;
 
 public abstract class Matrix {
+
+    private static final String DEFAULT_INDENT_STRING = "  ";
     /**
      * Number of Rows In The Matrix.
      */
@@ -76,4 +78,16 @@ public abstract class Matrix {
      * @return the transposed matrix
      */
     public abstract Matrix transpose();
+
+    @Override
+    public String toString() {
+        StringBuilder matrixString = new StringBuilder();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                matrixString.append(value(i, j)).append(DEFAULT_INDENT_STRING);
+            }
+            matrixString.append("\n");
+        }
+        return matrixString.toString();
+    }
 }

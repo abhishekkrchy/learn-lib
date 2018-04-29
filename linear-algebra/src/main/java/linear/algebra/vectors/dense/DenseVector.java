@@ -14,7 +14,7 @@ import static java.util.Arrays.copyOfRange;
  * a double array supporting
  * various useful methods.
  */
-public class DenseVector implements Vector {
+public class DenseVector extends Vector {
     private double[] values;
 
     /**
