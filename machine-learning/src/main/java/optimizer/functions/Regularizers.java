@@ -1,6 +1,6 @@
 package optimizer.functions;
 
-import linear.algebra.util.MarkedNode;
+import linear.algebra.util.Polynomial;
 import linear.algebra.vectors.dense.DenseVector;
 import util.constants.enums.Regularizer;
 
@@ -18,7 +18,7 @@ public class Regularizers {
      * @param varPos                    the var pos
      * @return the marked node
      */
-    public static MarkedNode regularize(DenseVector denseVector2, Regularizer regularizer, double regularizationCoefficient, int varPos) {
+    public static double regularize(DenseVector denseVector2, Regularizer regularizer, double regularizationCoefficient, int varPos) {
         double constant = 0;
         switch (regularizer) {
             case L1:
@@ -33,6 +33,6 @@ public class Regularizers {
                 break;
 
         }
-        return new MarkedNode(1, constant);
+        return constant;
     }
 }

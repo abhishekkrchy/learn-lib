@@ -45,7 +45,7 @@ public class GradientDescentOptimizer implements Optimizer{
             errors[iterations] = Errors.MARKED_ERROR_FUNCTION.apply(errorType).apply(0)
                     .apply(Vectors.toDenseVector(multiply(trainingX, initial.slice(1, initial.size())).stream().map(x -> x + initial.value(1))),
                             trainingY)
-                    .calc(initial.value(1));
+                    .value(initial.value(1));
             DenseVector denseVector = initial;
             while (iterations < maxIterations) {
                 double val = denseVector.value(0);
@@ -57,7 +57,7 @@ public class GradientDescentOptimizer implements Optimizer{
                 errors[++iterations] = Errors.MARKED_ERROR_FUNCTION.apply(errorType).apply(1)
                         .apply(Vectors.toDenseVector(multiply(trainingX, denseVector.slice(1,denseVector.size())).stream().map(x -> x + val)),
                                 trainingY)
-                        .calc(denseVector.value(1));
+                        .value(denseVector.value(1));
                 if (Math.abs(errors[iterations] - errors[iterations - 1]) <= minDescentLimit)
                     break;
             }

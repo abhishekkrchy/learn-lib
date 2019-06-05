@@ -1,6 +1,6 @@
 package linear.algebra.statistics.errors;
 
-import linear.algebra.util.MarkedNode;
+import linear.algebra.util.Polynomial;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
 
@@ -39,10 +39,10 @@ public class Errors {
      * {@link Integer} (which is the variable index)
      * is passed as arguement produces a {@link BiFunction}
      * which takes two {@link DenseVector}s and when
-     * applied returns a {@link MarkedNode} which is the
+     * applied returns a {@link Polynomial} which is the
      * calculated error.
      */
-    public static Function<ErrorType, Function<Integer, BiFunction<DenseVector, DenseVector, MarkedNode>>> MARKED_ERROR_FUNCTION = errorType -> integer -> (BiFunction<DenseVector, DenseVector, MarkedNode>) (denseVector, denseVector2) -> {
+    public static Function<ErrorType, Function<Integer, BiFunction<DenseVector, DenseVector, Polynomial>>> MARKED_ERROR_FUNCTION = errorType -> integer -> (BiFunction<DenseVector, DenseVector, Polynomial>) (denseVector, denseVector2) -> {
         switch (errorType) {
             case MSE:
             default:

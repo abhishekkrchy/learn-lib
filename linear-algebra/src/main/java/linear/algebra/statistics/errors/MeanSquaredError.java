@@ -1,8 +1,10 @@
 package linear.algebra.statistics.errors;
 
-import linear.algebra.util.MarkedNode;
+import linear.algebra.util.Polynomial;
 import linear.algebra.util.constants.enums.AlgebraicFunction;
 import linear.algebra.vectors.dense.DenseVector;
+
+import java.util.Arrays;
 
 /**
  * The type Mean squared error.
@@ -32,21 +34,27 @@ class MeanSquaredError {
      * @param varPos       the var pos
      * @return the marked node
      */
-    public static MarkedNode error(DenseVector denseVector1, DenseVector denseVector2, int varPos) {
+    public static Polynomial error(DenseVector denseVector1, DenseVector denseVector2, int varPos) {
+        // TODO : check on varPos and size & more readable
         double total = 0.0;
-        MarkedNode markedNode = new MarkedNode();
+        Polynomial childNode = null;
+        System.out.println(Arrays.toString(denseVector1.stream().toArray()));
+        System.out.println(Arrays.toString(denseVector2.stream().toArray()));
         for (int i = 0; i < denseVector1.size(); i++) {
-            if (i == varPos) {
-                MarkedNode temp = new MarkedNode(-1, denseVector1.value(i));
-                markedNode.setChildNode(temp);
-            } else {
+            if (i != varPos) {
                 total += Math.pow(denseVector1.value(i) - denseVector2.value(i), 2.0);
+            } else {
+                Polynomial sub2 = new Polynomial(2, 1);
+                System.out.println(sub2);
+                Polynomial sub = new Polynomial(0, denseVector1.value(i) * denseVector1.value(i), AlgebraicFunction.ADD, sub2);
+                System.out.println(sub);
+                Polynomial subF = new Polynomial(1, -2 * (denseVector1.value(i)), AlgebraicFunction.ADD, sub);
+                System.out.println(subF);
+                childNode = new Polynomial(0, 1.0 / (denseVector1.size()), AlgebraicFunction.MUL, subF);
+                System.out.println(childNode);
             }
         }
-        markedNode.setAdditiveConstant(total / denseVector1.size());
-        markedNode.setChildNodeExponent(2.0);
-        markedNode.setChildNodeMultiplicand(1.0 / (denseVector1.size()));
-        markedNode.setChildFunctionalRelation(AlgebraicFunction.ADD);
-        return markedNode;
+        System.out.println("total " + total);
+        return new Polynomial(0, total / denseVector1.size(), AlgebraicFunction.ADD, childNode);
     }
 }
