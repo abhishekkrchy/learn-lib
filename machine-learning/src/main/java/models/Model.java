@@ -1,11 +1,13 @@
 package models;
 
+import linear.algebra.matrices.Matrix;
+import linear.algebra.vectors.dense.DenseVector;
+
 /**
  * The interface Model.
  * Used for representation of various models
  * created after training on a dataset.
  */
-//TODO :: add Serialization and PMML support
 public interface Model {
     /**
      * Predict a primitive {@link Double} value
@@ -16,7 +18,7 @@ public interface Model {
      * @return the double
      * @throws Exception the exception
      */
-    double predict(Object values) throws Exception;
+    DenseVector predict(Matrix values) throws Exception;
 
     /**
      * Predict on a dataset stored in a file.
@@ -34,16 +36,4 @@ public interface Model {
      * @param path the path
      */
     void export(String path);
-
-    /**
-     * Load a model stored in a file.
-     *
-     * @param path the path
-     */
-    void load(String path);
-
-    /**
-     * Build a model.
-     */
-    void build();
 }

@@ -1,7 +1,9 @@
 package solvers.regression;
 
+import linear.algebra.matrices.Matrix;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.util.constants.enums.ErrorType;
+import linear.algebra.vectors.Vector;
 import models.Model;
 import optimizer.Optimizer;
 import solvers.regression.logistic.LogisticRegressionSolver;
@@ -39,27 +41,27 @@ public abstract class RegressionSolver extends Solver {
     /**
      * The Data set.
      */
-    protected double[][] dataSet;
+    protected Matrix dataSet;
     /**
      * The Training x.
      */
-    protected double[][] trainingX;
+    protected Matrix trainingX;
     /**
      * The Training y.
      */
-    protected double[] trainingY;
+    protected Vector trainingY;
     /**
      * The Testing x.
      */
-    protected double[][] testingX;
+    protected Matrix testingX;
     /**
      * The Testing y.
      */
-    protected double[] testingY;
+    protected Vector testingY;
     /**
      * The Factors.
      */
-    protected double[] factors;
+    protected Vector factors;
     /**
      * The Optimizer type type.
      */
@@ -75,11 +77,11 @@ public abstract class RegressionSolver extends Solver {
     /**
      * The Learning rate.
      */
-    protected double learningRate = 0.001;
+    protected double learningRate = 0.01;
     /**
      * The Regularization coefficient.
      */
-    protected double regularizationCoefficient = 0.01;
+    protected double regularizationCoefficient = 0.03;
     /**
      * The Min descent limit.
      */
@@ -117,7 +119,7 @@ public abstract class RegressionSolver extends Solver {
      * @param modelType the model type name
      * @return the model instance
      * @throws Exception the exception
-     * //TODO :: not needed?
+     *                   //TODO :: not needed?
      */
     public static Solver getModelInstance(ModelType modelType) throws Exception {
         switch (modelType) {
@@ -157,18 +159,6 @@ public abstract class RegressionSolver extends Solver {
         this.numberOfExamples = numberOfExamples;
     }
 
-
-    /**
-     * Get data set double [ ] [ ].
-     *
-     * @return the double [ ] [ ]
-     */
-    public double[][] getDataSet() {
-        return dataSet;
-    }
-
-
-
     /**
      * Load data set.
      *
@@ -177,57 +167,53 @@ public abstract class RegressionSolver extends Solver {
      * @throws Exception the exception
      */
     public Solver loadDataSet(String path, boolean header) throws Exception {
-        List<List<Double>> csvData = FileUtils.loadData(path, header);
-        numberOfExamples = csvData.size();
-        if (numberOfExamples > 0) {
-            numberOfVariables = csvData.get(0).size();
-            if (numberOfVariables == 0)
-                throw ExceptionUtils.getException(ExceptionConstants.EMPTY_CSV_DATA);
-        } else {
+        dataSet = FileUtils.loadData(path, header);
+        numberOfExamples = dataSet.getRows();
+        numberOfVariables = dataSet.getColumns();
+        if (numberOfVariables == 0 || numberOfExamples == 0) {
             throw ExceptionUtils.getException(ExceptionConstants.EMPTY_CSV_DATA);
         }
-        dataSet = new double[numberOfExamples][numberOfVariables];
-        for (int i = 0; i < numberOfExamples; i++) {
-            if (csvData.get(i).size() != numberOfVariables) {
-                throw ExceptionUtils.getException(ExceptionConstants.IMPROPER_CSV_DATA);
-            }
-            for (int j = 0; j < numberOfVariables; j++) {
-                dataSet[i][j] = csvData.get(i).get(j);
-            }
-        }
-        factors = new double[numberOfVariables];
+        factors = new DenseVector(numberOfVariables);
         return this;
     }
 
-    public void assignTrainAndTest(double testingDataPercent) {
+    public void assignTrainAndTest(double testingDataPercent, boolean randomize) {
         this.testingDataPercent = testingDataPercent;
-        assignTrainAndTest();
+        assignTrainAndTest(randomize);
     }
 
     /**
      * Assign train and test.
      */
-    public void assignTrainAndTest() {
+    public void assignTrainAndTest(boolean randomize) {
         int numberOfTestRows = (int) Math.floor(numberOfExamples * (testingDataPercent / 100));
-        Random random = new Random(new Date().getTime());
-        while (testIndexes.size() < numberOfTestRows) {
-            testIndexes.add(random.nextInt(numberOfExamples - 1));
+        if (randomize) {
+            Random random = new Random(new Date().getTime());
+            while (testIndexes.size() < numberOfTestRows) {
+                testIndexes.add(random.nextInt(numberOfExamples - 1));
+            }
+        } else {
+            for (int i = numberOfExamples - 1; i > numberOfExamples - numberOfTestRows - 1; i--) {
+                testIndexes.add(i);
+            }
         }
-        trainingX = new double[numberOfExamples - numberOfTestRows][numberOfVariables - 1];
-        trainingY = new double[numberOfExamples - numberOfTestRows];
-        testingX = new double[numberOfTestRows][numberOfVariables-1];
-        testingY = new double[numberOfTestRows];
+        trainingX = new DenseMatrix(numberOfExamples - numberOfTestRows, numberOfVariables - 1);
+        trainingY = new DenseVector(numberOfExamples - numberOfTestRows);
+        testingX = new DenseMatrix(numberOfTestRows, numberOfVariables - 1);
+        testingY = new DenseVector(numberOfTestRows);
+
         int testIndex = 0;
         int trainIndex = 0;
-        for (int i = 0; i < dataSet.length; i++) {
+
+        for (int i = 0; i < dataSet.getRows(); i++) {
             if (testIndexes.contains(i)) {
-                testingX[testIndex] = Arrays.copyOfRange(dataSet[i], 0, dataSet[i].length - 1);
-                testingY[testIndex++] = dataSet[i][dataSet[i].length - 1];
+                testingX.setRow(testIndex, dataSet.getRow(i).slice(0, dataSet.getColumns() - 1));
+                testingY.setValue(testIndex++, dataSet.value(i, dataSet.getColumns() - 1));
             } else {
-                trainingX[trainIndex] = Arrays.copyOfRange(dataSet[i], 0, dataSet[i].length - 1);
-                trainingY[trainIndex++] = dataSet[i][dataSet[i].length - 1];
+                trainingX.setRow(trainIndex, dataSet.getRow(i).slice(0, dataSet.getColumns() - 1));
+                trainingY.setValue(trainIndex++, dataSet.value(i, dataSet.getColumns() - 1));
             }
-            dataSet[i] = null;
+            // TODO: destroy not needed dataSet[i] = null;
         }
     }
 
@@ -235,10 +221,10 @@ public abstract class RegressionSolver extends Solver {
      * Get factors double [ ].
      *
      * @return the double [ ]
-     *
+     * <p>
      * TODO :: not needed ? can be used from models only.
      */
-    public double[] getFactors() {
+    public Vector getFactors() {
         return factors;
     }
 
@@ -247,7 +233,7 @@ public abstract class RegressionSolver extends Solver {
      *
      * @param factors the factors
      */
-    public void setFactors(double[] factors) {
+    public void setFactors(Vector factors) {
         this.factors = factors;
     }
 
@@ -359,77 +345,6 @@ public abstract class RegressionSolver extends Solver {
         this.minDescentLimit = minDescentLimit;
     }
 
-    /**
-     * Gets training x.
-     *
-     * @return the training x
-     */
-    public DenseMatrix getTrainingX() {
-        return new DenseMatrix(trainingX);
-    }
-
-    /**
-     * Sets training x.
-     *
-     * @param trainingX the training x
-     */
-    public void setTrainingX(double[][] trainingX) {
-        this.trainingX = trainingX;
-    }
-
-    /**
-     * Get testing x double [ ] [ ].
-     *
-     * @return the double [ ] [ ]
-     */
-    public double[][] getTestingX() {
-        return testingX;
-    }
-
-    /**
-     * Sets testing x.
-     *
-     * @param testingX the testing x
-     */
-    public void setTestingX(double[][] testingX) {
-        this.testingX = testingX;
-    }
-
-    /**
-     * Gets training y.
-     *
-     * @return the training y
-     */
-    public DenseVector getTrainingY() {
-        return new DenseVector(trainingY);
-    }
-
-    /**
-     * Sets training y.
-     *
-     * @param trainingY the training y
-     */
-    public void setTrainingY(double[] trainingY) {
-        this.trainingY = trainingY;
-    }
-
-    /**
-     * Get testing y double [ ].
-     *
-     * @return the double [ ]
-     */
-    public double[] getTestingY() {
-        return testingY;
-    }
-
-    /**
-     * Sets testing y.
-     *
-     * @param testingY the testing y
-     */
-    public void setTestingY(double[] testingY) {
-        this.testingY = testingY;
-    }
 
     /**
      * Gets error type.
@@ -449,4 +364,12 @@ public abstract class RegressionSolver extends Solver {
         this.errorType = errorType;
     }
 
+    public Matrix getTestingX() {
+        return testingX;
+    }
+
+    // TODO : validate
+    public Vector getTestingY() {
+        return testingY;
+    }
 }

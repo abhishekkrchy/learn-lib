@@ -3,21 +3,16 @@ package optimizer.grad.desc;
 import linear.algebra.Utils;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.statistics.errors.Errors;
-import linear.algebra.util.Polynomial;
 import linear.algebra.util.Vectors;
-import linear.algebra.util.constants.enums.AlgebraicFunction;
 import linear.algebra.util.constants.enums.ErrorType;
-import linear.algebra.util.poly.Pair;
-import linear.algebra.util.poly.SingleVarPolynomial;
+import linear.algebra.expressions.Polynomial;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import models.RegressionModel;
 import optimizer.Optimizer;
-import optimizer.functions.Regularizers;
 import util.constants.enums.Regularizer;
 
 import java.util.Arrays;
-import java.util.function.Function;
 
 
 public class GradientDescentOptimizer implements Optimizer {
@@ -60,12 +55,12 @@ public class GradientDescentOptimizer implements Optimizer {
         return new DenseMatrix(doubles);
     }
 
-    private SingleVarPolynomial[] paddedYYYY(DenseMatrix training, DenseVector theta, int varPos, DenseVector trainingY) throws Exception {
-        SingleVarPolynomial[] products = Utils.multiply(onepad(training), theta, varPos);
+    private Polynomial[] paddedYYYY(DenseMatrix training, DenseVector theta, int varPos, DenseVector trainingY) throws Exception {
+        Polynomial[] products = Utils.multiply(onepad(training), theta, varPos);
         for (int i = 0; i < trainingY.size(); i++) {
             products[i].term(-1 * trainingY.value(i));
         }
-        return Arrays.stream(products).map(SingleVarPolynomial::squared).map(x -> x.divideCoefficients(products.length)).toArray(SingleVarPolynomial[]::new);
+        return Arrays.stream(products).map(Polynomial::squared).map(x -> x.divideCoefficients(products.length)).toArray(Polynomial[]::new);
     }
 
     @Override
@@ -83,29 +78,17 @@ public class GradientDescentOptimizer implements Optimizer {
 
                 double[] delta = new double[denseVector.size()];
 
-                for (int i = 0; i < denseVector.size() ; i++) {
+                for (int i = 0; i < denseVector.size(); i++) {
 
 
-                    SingleVarPolynomial loss = Arrays.stream(paddedYYYY(trainingX, denseVector, i, trainingY)).reduce(new SingleVarPolynomial(2), SingleVarPolynomial::add);
+                    Polynomial loss = Arrays.stream(paddedYYYY(trainingX, denseVector, i, trainingY)).reduce(new Polynomial(2), Polynomial::add);
 
                     System.out.println("loss poly is" + loss);
 
-//                    if (regularizer == Regularizer.L2) {
-//                        loss.term(0.5 * regularizationCoefficient, 2);
-//                        loss.term(0.5 * regularizationCoefficient* (denseVector.slice(1, denseVector.size()).stream().map(x -> x * x).sum() - denseVector.value(i + 1)));
-//
-//                    }
+                    if (regularizer == Regularizer.L2) {
+                        loss.term(0.5 * regularizationCoefficient * (denseVector.slice(1, denseVector.size()).stream().map(x -> x * x).sum()));
+                    }
 
-//                    System.out.println("loss poly is" + loss);
-
-
-                    //double multiplier = Regularizers.regularize(denseVector, regularizer, regularizationCoefficient);
-                    //System.out.println("multiplier is" + multiplier);
-//        if (regularizer.equals(Regularizer.L1)) {
-//            multiplier = multiplier * (denseVector2.size() - 1);
-//        }
-
-                    //loss.term(multiplier, 1);
                     double changedValDer = loss.derivative(denseVector.value(i));
                     System.out.println("loss deri is" + loss.derivative() + " " + changedValDer);
                     delta[i] = changedValDer;
@@ -131,9 +114,7 @@ public class GradientDescentOptimizer implements Optimizer {
             }
             errorVector = new DenseVector(errors);
             System.out.println(errorVector + " = errors");
-            RegressionModel model = new RegressionModel();
-            model.setFactors(denseVector.slice(1, denseVector.size()));
-            model.setIntercept(denseVector.value(0));
+            RegressionModel model = new RegressionModel(denseVector.slice(1, denseVector.size()), denseVector.value(0));
             return model;
         } catch (Exception e) {
             e.printStackTrace();

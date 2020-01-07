@@ -1,4 +1,7 @@
-package linear.algebra;
+package linear.algebra.matrices;
+
+import linear.algebra.vectors.Vector;
+import linear.algebra.vectors.dense.DenseVector;
 
 public abstract class Matrix {
 
@@ -40,6 +43,10 @@ public abstract class Matrix {
      */
     public abstract double value(int row, int column);
 
+    public abstract void setValue(int row, int column, double value);
+
+    public abstract void setRow(int row, Vector rowContents);
+
     /**
      * Gets number of rows.
      *
@@ -78,6 +85,10 @@ public abstract class Matrix {
      * @return the transposed matrix
      */
     public abstract Matrix transpose();
+
+    public abstract Vector getRow(int index);
+
+    public abstract Vector getColumn(int index);
 
     @Override
     public String toString() {

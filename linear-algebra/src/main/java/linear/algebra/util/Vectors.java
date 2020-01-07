@@ -1,5 +1,6 @@
 package linear.algebra.util;
 
+import linear.algebra.vectors.Vector;
 import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.stream.DoubleStream;
@@ -7,7 +8,7 @@ import java.util.stream.DoubleStream;
 /**
  * The utility class Vectors
  * having utility method for
- * {@link linear.algebra.Vector}
+ * {@link Vector}
  * types.
  */
 public class Vectors {

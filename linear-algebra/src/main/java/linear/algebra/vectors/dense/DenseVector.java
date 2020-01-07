@@ -1,6 +1,6 @@
 package linear.algebra.vectors.dense;
 
-import linear.algebra.Vector;
+import linear.algebra.vectors.Vector;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -27,6 +27,10 @@ public class DenseVector extends Vector {
         this.values = values;
     }
 
+    public DenseVector(int size) {
+        this.values = new double[size];
+    }
+
     @Override
     public int size() {
         return values.length;
@@ -38,12 +42,17 @@ public class DenseVector extends Vector {
     }
 
     @Override
+    public void setValue(int index, double value) {
+        values[index] = value;
+    }
+
+    @Override
     public DenseVector allExcept(int index) {
-        double[] doubles = new double[values.length-1];
-        int ri =0;
+        double[] doubles = new double[values.length - 1];
+        int ri = 0;
         for (int i = 0; i < values.length; i++) {
-            if (i!=index){
-                doubles[ri++]=values[i];
+            if (i != index) {
+                doubles[ri++] = values[i];
             }
         }
         return new DenseVector(doubles);

@@ -35,7 +35,7 @@ public abstract class Solver {
      *
      * @param testingDataPercent the testing data percent
      */
-    public abstract void assignTrainAndTest(double testingDataPercent);
+    public abstract void assignTrainAndTest(double testingDataPercent, boolean randomize);
 
     /**
      * Gets model.
@@ -44,5 +44,5 @@ public abstract class Solver {
      */
     public abstract Model getModel();
 
-    public abstract void predict(String opFilePath,boolean headers) throws Exception;
+    public abstract void predict(String opFilePath, boolean headers) throws Exception;
 }

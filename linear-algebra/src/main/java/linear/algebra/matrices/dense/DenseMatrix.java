@@ -1,9 +1,8 @@
 package linear.algebra.matrices.dense;
 
-import linear.algebra.Matrix;
+import linear.algebra.matrices.Matrix;
+import linear.algebra.vectors.Vector;
 import linear.algebra.vectors.dense.DenseVector;
-
-import java.util.Arrays;
 
 public class DenseMatrix extends Matrix {
     private double[][] values;
@@ -42,6 +41,18 @@ public class DenseMatrix extends Matrix {
     }
 
     @Override
+    public void setValue(int row, int column, double value) {
+        values[row][column]=value;
+    }
+
+    @Override
+    public void setRow(int row, Vector rowContents) {
+        for (int i = 0; i < rowContents.size(); i++) {
+            values[row][i] = rowContents.value(i);
+        }
+    }
+
+    @Override
     public DenseMatrix transpose() {
         double[][] transposed = new double[values[0].length][values.length];
         for (int i = 0; i < values.length; i++) {
@@ -52,14 +63,16 @@ public class DenseMatrix extends Matrix {
         return new DenseMatrix(transposed);
     }
 
+    @Override
     public DenseVector getRow(int index) {
         return new DenseVector(values[index]);
     }
 
+    @Override
     public DenseVector getColumn(int index) {
         double[] column = new double[rows];
         for (int i = 0; i < rows; i++) {
-            column[i] = value(i,index);
+            column[i] = value(i, index);
         }
         return new DenseVector(column);
     }

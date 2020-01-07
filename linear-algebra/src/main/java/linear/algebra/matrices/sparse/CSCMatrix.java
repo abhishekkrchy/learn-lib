@@ -1,6 +1,7 @@
 package linear.algebra.matrices.sparse;
 
-import linear.algebra.Matrix;
+import linear.algebra.matrices.Matrix;
+import linear.algebra.vectors.Vector;
 
 /**
  * This class is the representation for a
@@ -50,10 +51,30 @@ public class CSCMatrix extends Matrix {
         return 0;
     }
 
+    @Override
+    public void setValue(int row, int column, double value) {
+        // TODO
+    }
+
+    @Override
+    public void setRow(int row, Vector rowContents) {
+        // TODO
+    }
+
 
     @Override
     public Matrix transpose() {
         return new CRSMatrix(rows, columns, values, rowNums, columnPointers);
+    }
+
+    @Override
+    public Vector getRow(int index) {
+        return null;
+    }
+
+    @Override
+    public Vector getColumn(int index) {
+        return null;
     }
 
 }

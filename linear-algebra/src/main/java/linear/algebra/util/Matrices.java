@@ -1,6 +1,6 @@
 package linear.algebra.util;
 
-import linear.algebra.Matrix;
+import linear.algebra.matrices.Matrix;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.matrices.sparse.CRSMatrix;
 import linear.algebra.matrices.sparse.CSCMatrix;

@@ -1,6 +1,6 @@
 package linear.algebra.vectors.sparse;
 
-import linear.algebra.Vector;
+import linear.algebra.vectors.Vector;
 import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.Arrays;
@@ -43,6 +43,11 @@ public class SparseVector extends Vector {
     public double value(int index) {
         int searchIndex = Arrays.binarySearch(indices, index);
         return indices[searchIndex == -1 ? 0 : searchIndex] == index ? values[searchIndex] : 0;
+    }
+
+    @Override
+    public void setValue(int index, double value) {
+        // TODO
     }
 
     @Override

@@ -1,4 +1,4 @@
-package linear.algebra;
+package linear.algebra.vectors;
 
 import linear.algebra.vectors.dense.DenseVector;
 
@@ -36,6 +36,8 @@ public abstract class Vector {
      * with that index.
      */
     public abstract double value(int index);
+
+    public abstract void setValue(int index, double value);
 
     public abstract DenseVector allExcept(int index);
 

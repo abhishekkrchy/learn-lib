@@ -1,6 +1,5 @@
 package optimizer.functions;
 
-import linear.algebra.util.Polynomial;
 import linear.algebra.vectors.dense.DenseVector;
 import util.constants.enums.Regularizer;
 
