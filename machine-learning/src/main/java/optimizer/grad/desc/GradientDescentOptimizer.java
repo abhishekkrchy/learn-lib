@@ -1,19 +1,26 @@
 package optimizer.grad.desc;
 
+import linear.algebra.Utils;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.statistics.errors.Errors;
+import linear.algebra.util.Polynomial;
 import linear.algebra.util.Vectors;
+import linear.algebra.util.constants.enums.AlgebraicFunction;
 import linear.algebra.util.constants.enums.ErrorType;
+import linear.algebra.util.poly.Pair;
+import linear.algebra.util.poly.SingleVarPolynomial;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import models.RegressionModel;
 import optimizer.Optimizer;
-import optimizer.functions.Functions;
+import optimizer.functions.Regularizers;
 import util.constants.enums.Regularizer;
 
-import static linear.algebra.Utils.multiply;
+import java.util.Arrays;
+import java.util.function.Function;
 
-public class GradientDescentOptimizer implements Optimizer{
+
+public class GradientDescentOptimizer implements Optimizer {
     private DenseVector initial;
     private int maxIterations;
     private DenseMatrix trainingX;
@@ -37,33 +44,95 @@ public class GradientDescentOptimizer implements Optimizer{
         this.minDescentLimit = minDescentLimit;
     }
 
+    private DenseVector padded(DenseMatrix training, DenseVector theta) throws Exception {
+        DenseVector product = Utils.multiply(training, theta.slice(1, theta.size()));
+        return Vectors.toDenseVector(product.stream().map(x -> x + theta.value(0)));
+    }
+
+    private DenseMatrix onepad(DenseMatrix denseMatrix) {
+        double[][] doubles = new double[denseMatrix.getRows()][denseMatrix.getColumns() + 1];
+        for (int i = 0; i < denseMatrix.getRows(); i++) {
+            doubles[i][0] = 1d;
+            for (int j = 0; j < denseMatrix.getColumns(); j++) {
+                doubles[i][j + 1] = denseMatrix.value(i, j);
+            }
+        }
+        return new DenseMatrix(doubles);
+    }
+
+    private SingleVarPolynomial[] paddedYYYY(DenseMatrix training, DenseVector theta, int varPos, DenseVector trainingY) throws Exception {
+        SingleVarPolynomial[] products = Utils.multiply(onepad(training), theta, varPos);
+        for (int i = 0; i < trainingY.size(); i++) {
+            products[i].term(-1 * trainingY.value(i));
+        }
+        return Arrays.stream(products).map(SingleVarPolynomial::squared).map(x -> x.divideCoefficients(products.length)).toArray(SingleVarPolynomial[]::new);
+    }
+
     @Override
     public Model optimize() {
         int iterations = 0;
-        double[] errors = new double[maxIterations];
+        double[] errors = new double[maxIterations + 1];
         try {
-            errors[iterations] = Errors.MARKED_ERROR_FUNCTION.apply(errorType).apply(0)
-                    .apply(Vectors.toDenseVector(multiply(trainingX, initial.slice(1, initial.size())).stream().map(x -> x + initial.value(1))),
-                            trainingY)
-                    .value(initial.value(1));
+            errors[iterations] = Errors.ERROR_FUNCTION.apply(errorType).apply(padded(trainingX, initial), trainingY);
             DenseVector denseVector = initial;
-            while (iterations < maxIterations) {
-                double val = denseVector.value(0);
-                double changeFactor = Functions.lossFunction(Vectors.toDenseVector(multiply(trainingX, denseVector.slice(1, denseVector.size())).stream().map(x -> x + val)),
-                        trainingY, regularizer, regularizationCoefficient, errorType, 1)
-                        .derivative(initial.value(1));
-                denseVector = Vectors.toDenseVector(denseVector.stream().map(x -> x - (changeFactor * learningRate)));
+            System.out.println(initial + "is initial");
 
-                errors[++iterations] = Errors.MARKED_ERROR_FUNCTION.apply(errorType).apply(1)
-                        .apply(Vectors.toDenseVector(multiply(trainingX, denseVector.slice(1,denseVector.size())).stream().map(x -> x + val)),
-                                trainingY)
-                        .value(denseVector.value(1));
+            while (iterations < maxIterations) {
+
+                System.out.println(" it " + iterations);
+
+                double[] delta = new double[denseVector.size()];
+
+                for (int i = 0; i < denseVector.size() ; i++) {
+
+
+                    SingleVarPolynomial loss = Arrays.stream(paddedYYYY(trainingX, denseVector, i, trainingY)).reduce(new SingleVarPolynomial(2), SingleVarPolynomial::add);
+
+                    System.out.println("loss poly is" + loss);
+
+//                    if (regularizer == Regularizer.L2) {
+//                        loss.term(0.5 * regularizationCoefficient, 2);
+//                        loss.term(0.5 * regularizationCoefficient* (denseVector.slice(1, denseVector.size()).stream().map(x -> x * x).sum() - denseVector.value(i + 1)));
+//
+//                    }
+
+//                    System.out.println("loss poly is" + loss);
+
+
+                    //double multiplier = Regularizers.regularize(denseVector, regularizer, regularizationCoefficient);
+                    //System.out.println("multiplier is" + multiplier);
+//        if (regularizer.equals(Regularizer.L1)) {
+//            multiplier = multiplier * (denseVector2.size() - 1);
+//        }
+
+                    //loss.term(multiplier, 1);
+                    double changedValDer = loss.derivative(denseVector.value(i));
+                    System.out.println("loss deri is" + loss.derivative() + " " + changedValDer);
+                    delta[i] = changedValDer;
+                }
+
+                double[] newDv = new double[denseVector.size()];
+                for (int i = 0; i < denseVector.size(); i++) {
+                    newDv[i] = denseVector.value(i) - (learningRate * delta[i]);
+                }
+
+                denseVector = new DenseVector(newDv);
+
+                System.out.println("initial dv tf to" + denseVector + " delta " + Arrays.toString(delta) + " errors " + Arrays.toString(errors));
+
+
+                errors[++iterations] = Errors.ERROR_FUNCTION.apply(errorType)
+                        .apply(padded(trainingX, denseVector), trainingY);
+
+                System.out.println(Arrays.toString(errors) + " = errors");
+
                 if (Math.abs(errors[iterations] - errors[iterations - 1]) <= minDescentLimit)
                     break;
             }
             errorVector = new DenseVector(errors);
-            RegressionModel model=new RegressionModel();
-            model.setFactors(denseVector.slice(1,denseVector.size()));
+            System.out.println(errorVector + " = errors");
+            RegressionModel model = new RegressionModel();
+            model.setFactors(denseVector.slice(1, denseVector.size()));
             model.setIntercept(denseVector.value(0));
             return model;
         } catch (Exception e) {

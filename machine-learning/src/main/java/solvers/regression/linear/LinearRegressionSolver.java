@@ -35,8 +35,8 @@ public class LinearRegressionSolver extends RegressionSolver {
 
     @Override
     public Solver solve() {
-        assignTrainAndTest();
-        DenseVector entryPoint = Statistics.getNormalDistributionSamples(numberOfVariables);
+        //assignTrainAndTest();
+        DenseVector entryPoint = new DenseVector(new double[]{1,2,3,4}); //Statistics.getNormalDistributionSamples(numberOfVariables);
         model = gradientDescent(entryPoint);
         return this;
     }

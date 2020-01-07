@@ -46,6 +46,11 @@ public class SparseVector extends Vector {
     }
 
     @Override
+    public DenseVector allExcept(int index) {
+        return null;
+    }
+
+    @Override
     public Iterator<Double> iterator() {
         return null;
     }

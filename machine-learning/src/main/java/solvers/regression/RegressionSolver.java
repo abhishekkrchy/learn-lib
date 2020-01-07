@@ -139,6 +139,10 @@ public abstract class RegressionSolver extends Solver {
         return numberOfVariables;
     }
 
+    public void setNumberOfVariables(int numberOfExamples) {
+        this.numberOfVariables = numberOfExamples;
+    }
+
     /**
      * Gets number of examples.
      *
@@ -147,6 +151,12 @@ public abstract class RegressionSolver extends Solver {
     public int getNumberOfExamples() {
         return numberOfExamples;
     }
+
+
+    public void setNumberOfExamples(int numberOfExamples) {
+        this.numberOfExamples = numberOfExamples;
+    }
+
 
     /**
      * Get data set double [ ] [ ].

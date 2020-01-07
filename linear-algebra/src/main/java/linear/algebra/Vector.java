@@ -1,5 +1,7 @@
 package linear.algebra;
 
+import linear.algebra.vectors.dense.DenseVector;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -34,6 +36,8 @@ public abstract class Vector {
      * with that index.
      */
     public abstract double value(int index);
+
+    public abstract DenseVector allExcept(int index);
 
     /**
      * Method for getting {@link Iterator} of

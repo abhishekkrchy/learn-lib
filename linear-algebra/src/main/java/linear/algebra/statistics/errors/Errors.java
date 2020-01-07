@@ -2,6 +2,7 @@ package linear.algebra.statistics.errors;
 
 import linear.algebra.util.Polynomial;
 import linear.algebra.util.constants.enums.ErrorType;
+import linear.algebra.util.poly.SingleVarPolynomial;
 import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.function.BiFunction;
@@ -42,7 +43,7 @@ public class Errors {
      * applied returns a {@link Polynomial} which is the
      * calculated error.
      */
-    public static Function<ErrorType, Function<Integer, BiFunction<DenseVector, DenseVector, Polynomial>>> MARKED_ERROR_FUNCTION = errorType -> integer -> (BiFunction<DenseVector, DenseVector, Polynomial>) (denseVector, denseVector2) -> {
+    public static Function<ErrorType, Function<Integer, BiFunction<DenseVector, DenseVector, SingleVarPolynomial>>> MARKED_ERROR_FUNCTION = errorType -> integer -> (BiFunction<DenseVector, DenseVector, SingleVarPolynomial>) (denseVector, denseVector2) -> {
         switch (errorType) {
             case MSE:
             default:

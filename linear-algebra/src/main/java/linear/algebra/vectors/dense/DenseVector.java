@@ -38,6 +38,18 @@ public class DenseVector extends Vector {
     }
 
     @Override
+    public DenseVector allExcept(int index) {
+        double[] doubles = new double[values.length-1];
+        int ri =0;
+        for (int i = 0; i < values.length; i++) {
+            if (i!=index){
+                doubles[ri++]=values[i];
+            }
+        }
+        return new DenseVector(doubles);
+    }
+
+    @Override
     public Iterator<Double> iterator() {
         return new Iterator<Double>() {
             private int index = 0;
