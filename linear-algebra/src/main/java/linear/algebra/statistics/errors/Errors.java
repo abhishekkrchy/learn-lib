@@ -1,7 +1,7 @@
 package linear.algebra.statistics.errors;
 
-import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.expressions.Polynomial;
+import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.function.BiFunction;

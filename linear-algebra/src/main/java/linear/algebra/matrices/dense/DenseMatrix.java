@@ -42,7 +42,7 @@ public class DenseMatrix extends Matrix {
 
     @Override
     public void setValue(int row, int column, double value) {
-        values[row][column]=value;
+        values[row][column] = value;
     }
 
     @Override

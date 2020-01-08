@@ -16,24 +16,6 @@ public interface Model {
      *
      * @param values the values
      * @return the double
-     * @throws Exception the exception
      */
-    DenseVector predict(Matrix values) throws Exception;
-
-    /**
-     * Predict on a dataset stored in a file.
-     *
-     * @param inpath  the inpath
-     * @param outpath the outpath
-     * @param header  the header
-     * @throws Exception the exception
-     */
-    void predict(String inpath, String outpath, boolean header) throws Exception;
-
-    /**
-     * Export this model to a file.
-     *
-     * @param path the path
-     */
-    void export(String path);
+    DenseVector predict(Matrix values);
 }

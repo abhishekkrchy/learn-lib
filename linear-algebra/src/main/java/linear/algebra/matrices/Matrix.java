@@ -1,7 +1,6 @@
 package linear.algebra.matrices;
 
 import linear.algebra.vectors.Vector;
-import linear.algebra.vectors.dense.DenseVector;
 
 public abstract class Matrix {
 

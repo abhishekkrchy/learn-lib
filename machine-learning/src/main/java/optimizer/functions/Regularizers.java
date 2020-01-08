@@ -14,13 +14,11 @@ public class Regularizers {
      * @param denseVector2              the dense vector 2
      * @param regularizer               the regularizer
      * @param regularizationCoefficient the regularization coefficient
-     * @param varPos                    the var pos
      * @return the marked node
      */
     public static double regularize(DenseVector denseVector2, Regularizer regularizer, double regularizationCoefficient) {
         double constant = 0;
         switch (regularizer) {
-
             case L1:
                 constant += regularizationCoefficient * (denseVector2.slice(1, denseVector2.size()).stream().map(Math::abs).reduce(0.0, Double::sum));
                 break;

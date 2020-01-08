@@ -3,24 +3,25 @@ package solvers.regression;
 import linear.algebra.matrices.Matrix;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.util.constants.enums.ErrorType;
-import linear.algebra.vectors.Vector;
+import linear.algebra.vectors.dense.DenseVector;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import models.Model;
 import optimizer.Optimizer;
 import optimizer.Optimizers;
-import solvers.regression.logistic.LogisticRegressionSolver;
-import util.constants.exception.ExceptionConstants;
-import linear.algebra.vectors.dense.DenseVector;
 import solvers.Solver;
 import util.ExceptionUtils;
 import util.FileUtils;
 import util.constants.enums.OptimizerType;
 import util.constants.enums.Regularizer;
-import util.constants.enums.ModelType;
-import solvers.regression.linear.LinearRegressionSolver;
+import util.constants.exception.ExceptionConstants;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
+import static linear.algebra.util.constants.enums.ErrorType.MSE;
 import static util.constants.enums.OptimizerType.GRADIENT_DESCENT;
 import static util.constants.enums.Regularizer.NONE;
 
@@ -32,35 +33,66 @@ import static util.constants.enums.Regularizer.NONE;
  * and {@link LogisticRegressionSolver}.
  */
 
-public abstract class RegressionSolver extends Solver {
+@Builder
+@AllArgsConstructor
+public class RegressionSolver extends Solver {
 
-    protected final OptimizerType optimizerType;
-    protected final Regularizer regularizer;
-    protected final int maxIterations;
-    protected final double learningRate;
-    protected final double regularizationCoefficient;
-    protected final double minDescentLimit;
-    protected final double testingDataPercent;
-    protected ErrorType errorType;
+    private String inputFile;
+
+    @Builder.Default
+    private OptimizerType optimizerType = GRADIENT_DESCENT;
+    @Builder.Default
+    private Regularizer regularizer = NONE;
+    @Builder.Default
+    private int maxIterations = 1000;
+    @Builder.Default
+    private double learningRate = 0.01;
+    @Builder.Default
+    private double regularizationCoefficient = 0.03;
+    @Builder.Default
+    private double minDescentLimit = 0.0001;
+    @Builder.Default
+    private double testingDataPercent = 25.0;
+    @Builder.Default
+    private ErrorType errorType = MSE;
 
 
     private Matrix dataSet;
-    protected DenseMatrix trainingX;
-    protected DenseVector trainingY;
-    protected DenseMatrix testingX;
-    protected DenseVector testingY;
+    private DenseMatrix trainingX;
+    private DenseVector trainingY;
+    private DenseMatrix testingX;
+    private DenseVector testingY;
 
-    protected RegressionSolver(String inputFile, ErrorType errorType, OptimizerType optimizerType, Regularizer regularizer, int maxIterations, double learningRate, double regularizationCoefficient, double minDescentLimit, double testingDataPercent) throws Exception {
-        this.errorType = errorType;
-        this.optimizerType = optimizerType;
-        this.regularizer = regularizer;
-        this.maxIterations = maxIterations;
-        this.learningRate = learningRate;
-        this.regularizationCoefficient = regularizationCoefficient;
-        this.minDescentLimit = minDescentLimit;
-        this.testingDataPercent = testingDataPercent;
-        // TODO : hard-coded value
-        loadDataSet(inputFile, false);
+    //@Builder
+//    protected RegressionSolver(String inputFile, ErrorType errorType, OptimizerType optimizerType, Regularizer regularizer, int maxIterations, double learningRate, double regularizationCoefficient, double minDescentLimit, double testingDataPercent) throws Exception {
+////        this.inputFile = inputFile;
+////        this.errorType = errorType;
+////        this.optimizerType = optimizerType;
+////        this.regularizer = regularizer;
+////        this.maxIterations = maxIterations;
+////        this.learningRate = learningRate;
+////        this.regularizationCoefficient = regularizationCoefficient;
+////        this.minDescentLimit = minDescentLimit;
+////        this.testingDataPercent = testingDataPercent;
+////        // TODO : hard-coded value
+//        loadDataSet(false);
+//    }
+
+    @Override
+    public DenseMatrix getTestingX() {
+        return testingX;
+    }
+
+    @Override
+    public DenseVector getTestingY() {
+        return testingY;
+    }
+
+    @Override
+    protected DenseVector entryPoint() {
+        // TODO : remove hardcoding
+        loadDataSet(false);
+        return new DenseVector(new double[]{1, 2, 3, 4});//Statistics.getNormalDistributionSamples(dataSet.getColumns());
     }
 
     /**
@@ -71,7 +103,7 @@ public abstract class RegressionSolver extends Solver {
      * @throws Exception the exception
      *                   //TODO :: not needed?
      */
-//    public static Solver getModelInstance(ModelType modelType) throws Exception {
+//    public static Solver getSolver(ModelType modelType) throws Exception {
 //        switch (modelType) {
 //            case LINEAR_REGRESSION:
 //                return new LinearRegressionSolver();
@@ -89,8 +121,8 @@ public abstract class RegressionSolver extends Solver {
      * @param header the header
      * @throws Exception the exception
      */
-    public Solver loadDataSet(String path, boolean header) {
-        dataSet = FileUtils.loadData(path, header);
+    public Solver loadDataSet(boolean header) {
+        dataSet = FileUtils.loadData(inputFile, header);
         if (dataSet.getRows() == 0 || dataSet.getColumns() == 0) {
             throw ExceptionUtils.getException(ExceptionConstants.EMPTY_CSV_DATA);
         }
@@ -153,16 +185,4 @@ public abstract class RegressionSolver extends Solver {
         Optimizer optimizer = Optimizers.optimizer(optimizerType, entryPoint(), maxIterations, trainingX, errorType, trainingY, regularizer, regularizationCoefficient, learningRate, minDescentLimit);
         return optimizer.optimize();
     }
-
-    protected abstract DenseVector entryPoint();
-
-
-//    public Matrix getTestingX() {
-//        return testingX;
-//    }
-//
-//    // TODO : validate
-//    public Vector getTestingY() {
-//        return testingY;
-//    }
 }

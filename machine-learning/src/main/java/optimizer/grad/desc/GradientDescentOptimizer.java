@@ -1,11 +1,11 @@
 package optimizer.grad.desc;
 
 import linear.algebra.Utils;
+import linear.algebra.expressions.Polynomial;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.statistics.errors.Errors;
 import linear.algebra.util.Vectors;
 import linear.algebra.util.constants.enums.ErrorType;
-import linear.algebra.expressions.Polynomial;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 import models.RegressionModel;
@@ -16,6 +16,7 @@ import java.util.Arrays;
 
 
 public class GradientDescentOptimizer implements Optimizer {
+
     private DenseVector initial;
     private int maxIterations;
     private DenseMatrix trainingX;
@@ -25,7 +26,6 @@ public class GradientDescentOptimizer implements Optimizer {
     private double regularizationCoefficient;
     private double learningRate;
     private double minDescentLimit;
-    private DenseVector errorVector;
 
     public GradientDescentOptimizer(DenseVector initial, int maxIterations, DenseMatrix trainingX, ErrorType errorType, DenseVector trainingY, Regularizer regularizer, double regularizationCoefficient, double learningRate, double minDescentLimit) {
         this.initial = initial;
@@ -39,12 +39,12 @@ public class GradientDescentOptimizer implements Optimizer {
         this.minDescentLimit = minDescentLimit;
     }
 
-    private DenseVector padded(DenseMatrix training, DenseVector theta) throws Exception {
-        DenseVector product = Utils.multiply(training, theta.slice(1, theta.size()));
-        return Vectors.toDenseVector(product.stream().map(x -> x + theta.value(0)));
+    private DenseVector multiplyAndAddIntercept(DenseMatrix training, DenseVector factors) {
+        DenseVector product = Utils.multiply(training, factors.slice(1, factors.size()));
+        return Vectors.toDenseVector(product.stream().map(x -> x + factors.value(0)));
     }
 
-    private DenseMatrix onepad(DenseMatrix denseMatrix) {
+    private DenseMatrix padLeftForInterceptInPolynomial(DenseMatrix denseMatrix) {
         double[][] doubles = new double[denseMatrix.getRows()][denseMatrix.getColumns() + 1];
         for (int i = 0; i < denseMatrix.getRows(); i++) {
             doubles[i][0] = 1d;
@@ -55,8 +55,8 @@ public class GradientDescentOptimizer implements Optimizer {
         return new DenseMatrix(doubles);
     }
 
-    private Polynomial[] paddedYYYY(DenseMatrix training, DenseVector theta, int varPos, DenseVector trainingY) throws Exception {
-        Polynomial[] products = Utils.multiply(onepad(training), theta, varPos);
+    private Polynomial[] paddedYYYY(DenseMatrix training, DenseVector factors, int varPos, DenseVector trainingY) {
+        Polynomial[] products = Utils.multiply(padLeftForInterceptInPolynomial(training), factors, varPos);
         for (int i = 0; i < trainingY.size(); i++) {
             products[i].term(-1 * trainingY.value(i));
         }
@@ -67,8 +67,9 @@ public class GradientDescentOptimizer implements Optimizer {
     public Model optimize() {
         int iterations = 0;
         double[] errors = new double[maxIterations + 1];
+
         try {
-            errors[iterations] = Errors.ERROR_FUNCTION.apply(errorType).apply(padded(trainingX, initial), trainingY);
+            errors[iterations] = Errors.ERROR_FUNCTION.apply(errorType).apply(multiplyAndAddIntercept(trainingX, initial), trainingY);
             DenseVector denseVector = initial;
             System.out.println(initial + "is initial");
 
@@ -105,14 +106,14 @@ public class GradientDescentOptimizer implements Optimizer {
 
 
                 errors[++iterations] = Errors.ERROR_FUNCTION.apply(errorType)
-                        .apply(padded(trainingX, denseVector), trainingY);
+                        .apply(multiplyAndAddIntercept(trainingX, denseVector), trainingY);
 
                 System.out.println(Arrays.toString(errors) + " = errors");
 
                 if (Math.abs(errors[iterations] - errors[iterations - 1]) <= minDescentLimit)
                     break;
             }
-            errorVector = new DenseVector(errors);
+            DenseVector errorVector = new DenseVector(errors);
             System.out.println(errorVector + " = errors");
             RegressionModel model = new RegressionModel(denseVector.slice(1, denseVector.size()), denseVector.value(0));
             return model;

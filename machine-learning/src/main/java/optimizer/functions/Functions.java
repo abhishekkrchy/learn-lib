@@ -1,8 +1,8 @@
 package optimizer.functions;
 
+import linear.algebra.expressions.Polynomial;
 import linear.algebra.statistics.errors.Errors;
 import linear.algebra.util.constants.enums.ErrorType;
-import linear.algebra.expressions.Polynomial;
 import linear.algebra.vectors.dense.DenseVector;
 import util.constants.enums.Regularizer;
 
@@ -22,15 +22,11 @@ public class Functions {
      * @param varPos                    the variable pos
      * @return the marked node
      */
-//TODO :: change varPos for features when done with tests
     public static Polynomial lossFunction(DenseVector denseVector1, DenseVector denseVector2, Regularizer regularizer, double regularizationCoefficient, ErrorType errorType, int varPos) {
         Polynomial loss = Errors.MARKED_ERROR_FUNCTION.apply(errorType)
                 .apply(varPos).apply(denseVector1, denseVector2);
         double multiplier = Regularizers.regularize(denseVector1, regularizer, regularizationCoefficient);
-//        if (regularizer.equals(Regularizer.L1)) {
-//            multiplier = multiplier * (denseVector2.size() - 1);
-//        }
         loss.term(multiplier, 1);
-        return loss;// new Polynomial(1.0, multiplier, AlgebraicFunction.ADD, loss);
+        return loss;
     }
 }

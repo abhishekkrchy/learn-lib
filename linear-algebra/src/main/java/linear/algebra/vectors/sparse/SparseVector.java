@@ -20,7 +20,7 @@ public class SparseVector extends Vector {
 
     }
 
-    public SparseVector(DenseVector denseVector){
+    public SparseVector(DenseVector denseVector) {
         this(denseVector.stream().toArray());
     }
 
