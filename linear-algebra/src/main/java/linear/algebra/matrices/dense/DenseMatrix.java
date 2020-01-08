@@ -1,6 +1,9 @@
 package linear.algebra.matrices.dense;
 
+import linear.algebra.expressions.Polynomial;
 import linear.algebra.matrices.Matrix;
+import linear.algebra.util.ExceptionUtils;
+import linear.algebra.util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.Vector;
 import linear.algebra.vectors.dense.DenseVector;
 
@@ -77,4 +80,38 @@ public class DenseMatrix extends Matrix {
         return new DenseVector(column);
     }
 
+    @Override
+    public Matrix addColumn(double defaultValue) {
+        double[][] doubles = new double[getRows()][getColumns() + 1];
+        for (int i = 0; i < getRows(); i++) {
+            doubles[i][0] = defaultValue;
+            for (int j = 0; j < getColumns(); j++) {
+                doubles[i][j + 1] = value(i, j);
+            }
+        }
+        return new DenseMatrix(doubles);
+    }
+
+    public DenseVector multiply(Vector vector) {
+        checkCompatibility(vector);
+        double[] result = new double[vector.size()];
+        for (int i = 0; i < vector.size(); i++) {
+            result[i] = getRow(i).dotProduct(vector);
+        }
+        return new DenseVector(result);
+    }
+
+    public Polynomial[] multiplyWithVariable(Vector vector, int varPos) {
+        Polynomial[] result = new Polynomial[vector.size() - 1];
+        for (int i = 0; i < vector.size() - 1; i++) {
+            result[i] = getRow(i).dotProductWithVariable(vector, varPos);
+        }
+        return result;
+    }
+
+    private void checkCompatibility(Vector vector) {
+        if (getColumns() != vector.size()) {
+            throw ExceptionUtils.getException(ExceptionConstants.INCOMPATIBLE_MATRICES);
+        }
+    }
 }

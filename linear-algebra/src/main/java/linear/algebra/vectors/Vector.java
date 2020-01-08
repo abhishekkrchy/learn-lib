@@ -1,5 +1,6 @@
 package linear.algebra.vectors;
 
+import linear.algebra.expressions.Polynomial;
 import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.ArrayList;
@@ -59,6 +60,14 @@ public abstract class Vector {
      * created using the sliced values.
      */
     public abstract Vector slice(int fromIndex, int toIndex);
+
+    public abstract double dotProduct(Vector other);
+
+    public abstract Polynomial dotProductWithVariable(Vector other, int varPos);
+
+    public abstract double head();
+
+    public abstract DenseVector tail();
 
     /**
      * Method to generate a primitive stream

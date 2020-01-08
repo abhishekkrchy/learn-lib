@@ -19,8 +19,7 @@ public class Vectors {
      * @param doubleStream the double stream
      * @return the dense vector
      */
-    public static DenseVector toDenseVector(DoubleStream doubleStream) {
+    public static DenseVector toDenseVector(DoubleStream doubleStream){
         return new DenseVector(doubleStream.toArray());
     }
-
 }

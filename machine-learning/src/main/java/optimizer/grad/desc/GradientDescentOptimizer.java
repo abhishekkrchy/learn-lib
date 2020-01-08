@@ -1,6 +1,5 @@
 package optimizer.grad.desc;
 
-import linear.algebra.Utils;
 import linear.algebra.expressions.Polynomial;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.statistics.errors.Errors;
@@ -40,23 +39,12 @@ public class GradientDescentOptimizer implements Optimizer {
     }
 
     private DenseVector multiplyAndAddIntercept(DenseMatrix training, DenseVector factors) {
-        DenseVector product = Utils.multiply(training, factors.slice(1, factors.size()));
-        return Vectors.toDenseVector(product.stream().map(x -> x + factors.value(0)));
+        DenseVector product = training.multiply(factors.tail());
+        return Vectors.toDenseVector(product.stream().map(x -> x + factors.head()));
     }
 
-    private DenseMatrix padLeftForInterceptInPolynomial(DenseMatrix denseMatrix) {
-        double[][] doubles = new double[denseMatrix.getRows()][denseMatrix.getColumns() + 1];
-        for (int i = 0; i < denseMatrix.getRows(); i++) {
-            doubles[i][0] = 1d;
-            for (int j = 0; j < denseMatrix.getColumns(); j++) {
-                doubles[i][j + 1] = denseMatrix.value(i, j);
-            }
-        }
-        return new DenseMatrix(doubles);
-    }
-
-    private Polynomial[] paddedYYYY(DenseMatrix training, DenseVector factors, int varPos, DenseVector trainingY) {
-        Polynomial[] products = Utils.multiply(padLeftForInterceptInPolynomial(training), factors, varPos);
+    private Polynomial[] polynomialError(DenseMatrix training, DenseVector factors, int varPos, DenseVector trainingY) {
+        Polynomial[] products = training.addColumn(0).multiplyWithVariable(factors, varPos);
         for (int i = 0; i < trainingY.size(); i++) {
             products[i].term(-1 * trainingY.value(i));
         }
@@ -82,7 +70,7 @@ public class GradientDescentOptimizer implements Optimizer {
                 for (int i = 0; i < denseVector.size(); i++) {
 
 
-                    Polynomial loss = Arrays.stream(paddedYYYY(trainingX, denseVector, i, trainingY)).reduce(new Polynomial(2), Polynomial::add);
+                    Polynomial loss = Arrays.stream(polynomialError(trainingX, denseVector, i, trainingY)).reduce(new Polynomial(2), Polynomial::add);
 
                     System.out.println("loss poly is" + loss);
 

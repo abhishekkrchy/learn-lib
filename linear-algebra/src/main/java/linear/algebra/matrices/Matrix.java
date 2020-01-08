@@ -1,5 +1,6 @@
 package linear.algebra.matrices;
 
+import linear.algebra.expressions.Polynomial;
 import linear.algebra.vectors.Vector;
 
 public abstract class Matrix {
@@ -88,6 +89,14 @@ public abstract class Matrix {
     public abstract Vector getRow(int index);
 
     public abstract Vector getColumn(int index);
+
+    // TODO : maye add col pos
+    public abstract Matrix addColumn(double values);
+
+
+    public abstract Vector multiply(Vector vector);
+
+    public abstract Polynomial[] multiplyWithVariable(Vector vector, int varPos);
 
     @Override
     public String toString() {

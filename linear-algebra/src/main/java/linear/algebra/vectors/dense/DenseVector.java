@@ -1,5 +1,8 @@
 package linear.algebra.vectors.dense;
 
+import linear.algebra.expressions.Polynomial;
+import linear.algebra.util.ExceptionUtils;
+import linear.algebra.util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.Vector;
 
 import java.util.Arrays;
@@ -15,6 +18,7 @@ import static java.util.Arrays.copyOfRange;
  * various useful methods.
  */
 public class DenseVector extends Vector {
+
     private double[] values;
 
     /**
@@ -81,8 +85,48 @@ public class DenseVector extends Vector {
     }
 
     @Override
+    public double dotProduct(Vector other) {
+        checkCompatibility(other);
+        double result = 0.0;
+        for (int i = 0; i < size(); i++) {
+            result += (value(i) * other.value(i));
+        }
+        return result;
+    }
+
+    @Override
+    public Polynomial dotProductWithVariable(Vector other, int varPos) {
+        checkCompatibility(other);
+        double total = 0.0;
+        Polynomial polynomial = new Polynomial(1);
+        for (int i = 0; i < size(); i++) {
+            if (i == varPos) {
+                polynomial.term(value(i), 1);
+            } else {
+                total += (value(i) * other.value(i));
+            }
+        }
+        return polynomial.term(total);
+    }
+
+    @Override
+    public double head() {
+        return value(0);
+    }
+
+    @Override
+    public DenseVector tail() {
+        return slice(1, size());
+    }
+
+    private void checkCompatibility(Vector other) {
+        if (size() != other.size()) {
+            throw ExceptionUtils.getException(ExceptionConstants.INCOMPATIBLE_MATRICES);
+        }
+    }
+
+    @Override
     public DoubleStream stream() {
         return Arrays.stream(values);
     }
-
 }
