@@ -53,61 +53,54 @@ public class GradientDescentOptimizer implements Optimizer {
 
     @Override
     public Model optimize() {
+
         int iterations = 0;
+        DenseVector factors = initial;
+        System.out.println(initial + "is initial");
+
         double[] errors = new double[maxIterations + 1];
-
-        try {
-            errors[iterations] = Errors.ERROR_FUNCTION.apply(errorType).apply(multiplyAndAddIntercept(trainingX, initial), trainingY);
-            DenseVector denseVector = initial;
-            System.out.println(initial + "is initial");
-
-            while (iterations < maxIterations) {
-
-                System.out.println(" it " + iterations);
-
-                double[] delta = new double[denseVector.size()];
-
-                for (int i = 0; i < denseVector.size(); i++) {
+        errors[0] = Errors.ERROR_FUNCTION.apply(errorType).apply(multiplyAndAddIntercept(trainingX, initial), trainingY);
 
 
-                    Polynomial loss = Arrays.stream(polynomialError(trainingX, denseVector, i, trainingY)).reduce(new Polynomial(2), Polynomial::add);
+        while (iterations < maxIterations) {
 
-                    System.out.println("loss poly is" + loss);
+            System.out.println(" it " + iterations);
 
-                    if (regularizer == Regularizer.L2) {
-                        loss.term(0.5 * regularizationCoefficient * (denseVector.slice(1, denseVector.size()).stream().map(x -> x * x).sum()));
-                    }
-
-                    double changedValDer = loss.derivative(denseVector.value(i));
-                    System.out.println("loss deri is" + loss.derivative() + " " + changedValDer);
-                    delta[i] = changedValDer;
+            double[] delta = new double[factors.size()];
+            for (int i = 0; i < factors.size(); i++) {
+                Polynomial loss = Arrays.stream(polynomialError(trainingX, factors, i, trainingY)).reduce(new Polynomial(2), Polynomial::add);
+                System.out.println("loss poly is" + loss);
+                if (regularizer == Regularizer.L2) {
+                    loss.term(0.5 * regularizationCoefficient * (factors.tail()).stream().map(x -> Math.pow(x, 2)).sum());
                 }
 
-                double[] newDv = new double[denseVector.size()];
-                for (int i = 0; i < denseVector.size(); i++) {
-                    newDv[i] = denseVector.value(i) - (learningRate * delta[i]);
-                }
-
-                denseVector = new DenseVector(newDv);
-
-                System.out.println("initial dv tf to" + denseVector + " delta " + Arrays.toString(delta) + " errors " + Arrays.toString(errors));
-
-
-                errors[++iterations] = Errors.ERROR_FUNCTION.apply(errorType)
-                        .apply(multiplyAndAddIntercept(trainingX, denseVector), trainingY);
-
-                System.out.println(Arrays.toString(errors) + " = errors");
-
-                if (Math.abs(errors[iterations] - errors[iterations - 1]) <= minDescentLimit)
-                    break;
+                double derivativeOfLoss = loss.derivative(factors.value(i));
+                System.out.println("loss deri is" + loss.derivative() + " " + derivativeOfLoss);
+                delta[i] = derivativeOfLoss;
             }
-            DenseVector errorVector = new DenseVector(errors);
-            System.out.println(errorVector + " = errors");
-            RegressionModel model = new RegressionModel(denseVector.slice(1, denseVector.size()), denseVector.value(0));
-            return model;
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            double[] newFactors = new double[factors.size()];
+            for (int i = 0; i < factors.size(); i++) {
+                newFactors[i] = factors.value(i) - (learningRate * delta[i]);
+            }
+
+            factors = new DenseVector(newFactors);
+
+            System.out.println("initial dv tf to" + factors + " delta " + Arrays.toString(delta) + " errors " + Arrays.toString(errors));
+
+
+            errors[++iterations] = Errors.ERROR_FUNCTION.apply(errorType)
+                    .apply(multiplyAndAddIntercept(trainingX, factors), trainingY);
+
+            System.out.println(Arrays.toString(errors) + " = errors");
+
+            if (Math.abs(errors[iterations] - errors[iterations - 1]) <= minDescentLimit) {
+                System.out.println("Min descent limit reached");
+                break;
+            }
         }
-        return null;
+        DenseVector errorVector = new DenseVector(errors);
+        System.out.println(errorVector + " = errors");
+        return new RegressionModel(factors);
     }
 }
