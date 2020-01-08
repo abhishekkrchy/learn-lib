@@ -18,7 +18,7 @@ public abstract class Solver {
      *
      * @return the solver
      */
-    public abstract Solver solve();
+    public abstract Model solve();
 
     /**
      * Load data set.

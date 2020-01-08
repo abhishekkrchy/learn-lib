@@ -23,10 +23,15 @@ public class FileUtils {
      * @return the list
      * @throws IOException the io exception
      */
-    public static Matrix loadData(String path, boolean headerPresent) throws IOException {
-        return new DenseMatrix(Files.lines(Paths.get(new File(path).toURI()))
-                .map(line ->line.trim().split(","))
-                .map(word -> Stream.of(word).mapToDouble(Double::parseDouble).toArray())
-                .toArray(double[][]::new));
+    public static Matrix loadData(String path, boolean headerPresent) {
+        // TODO : remove exception from here and try with resources
+        try {
+            return new DenseMatrix(Files.lines(Paths.get(new File(path).toURI()))
+                    .map(line -> line.trim().split(","))
+                    .map(word -> Stream.of(word).mapToDouble(Double::parseDouble).toArray())
+                    .toArray(double[][]::new));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

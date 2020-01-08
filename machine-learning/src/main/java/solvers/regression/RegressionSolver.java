@@ -4,8 +4,10 @@ import linear.algebra.matrices.Matrix;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.Vector;
+import lombok.Builder;
 import models.Model;
 import optimizer.Optimizer;
+import optimizer.Optimizers;
 import solvers.regression.logistic.LogisticRegressionSolver;
 import util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.dense.DenseVector;
@@ -29,88 +31,36 @@ import static util.constants.enums.Regularizer.NONE;
  * Solvers currently {@link LinearRegressionSolver}
  * and {@link LogisticRegressionSolver}.
  */
-public abstract class RegressionSolver extends Solver {
-    /**
-     * The Number of variables.
-     */
-    protected int numberOfVariables;
-    /**
-     * The Number of examples.
-     */
-    protected int numberOfExamples;
-    /**
-     * The Data set.
-     */
-    protected Matrix dataSet;
-    /**
-     * The Training x.
-     */
-    protected Matrix trainingX;
-    /**
-     * The Training y.
-     */
-    protected Vector trainingY;
-    /**
-     * The Testing x.
-     */
-    protected Matrix testingX;
-    /**
-     * The Testing y.
-     */
-    protected Vector testingY;
-    /**
-     * The Factors.
-     */
-    protected Vector factors;
-    /**
-     * The Optimizer type type.
-     */
-    protected OptimizerType optimizerTypeType = GRADIENT_DESCENT;
-    /**
-     * The Regularizer.
-     */
-    protected Regularizer regularizer = NONE;
-    /**
-     * The Max iterations.
-     */
-    protected int maxIterations = 100000;
-    /**
-     * The Learning rate.
-     */
-    protected double learningRate = 0.01;
-    /**
-     * The Regularization coefficient.
-     */
-    protected double regularizationCoefficient = 0.03;
-    /**
-     * The Min descent limit.
-     */
-    protected double minDescentLimit = 0.0001;
-    /**
-     * The Test indexes.
-     */
-    protected Set<Integer> testIndexes = new HashSet<>();
-    /**
-     * The Testing data percent.
-     */
-    protected double testingDataPercent = 25.0;
-    /**
-     * The Error type.
-     */
-    protected ErrorType errorType;
-    /**
-     * The Model.
-     */
-    protected Model model;
-    /**
-     * The Optimizer.
-     */
-    protected Optimizer optimizer;
 
-    /**
-     * Instantiates a new Regression model.
-     */
-    public RegressionSolver() {
+public abstract class RegressionSolver extends Solver {
+
+    protected final OptimizerType optimizerType;
+    protected final Regularizer regularizer;
+    protected final int maxIterations;
+    protected final double learningRate;
+    protected final double regularizationCoefficient;
+    protected final double minDescentLimit;
+    protected final double testingDataPercent;
+    protected ErrorType errorType;
+
+
+    private Matrix dataSet;
+    protected DenseMatrix trainingX;
+    protected DenseVector trainingY;
+    protected DenseMatrix testingX;
+    protected DenseVector testingY;
+
+    protected RegressionSolver(String inputFile, ErrorType errorType, OptimizerType optimizerType, Regularizer regularizer, int maxIterations, double learningRate, double regularizationCoefficient, double minDescentLimit, double testingDataPercent) throws Exception {
+        this.errorType = errorType;
+        this.optimizerType = optimizerType;
+        this.regularizer = regularizer;
+        this.maxIterations = maxIterations;
+        this.learningRate = learningRate;
+        this.regularizationCoefficient = regularizationCoefficient;
+        this.minDescentLimit = minDescentLimit;
+        this.testingDataPercent = testingDataPercent;
+        // TODO : hard-coded value
+        loadDataSet(inputFile, false);
     }
 
     /**
@@ -121,43 +71,16 @@ public abstract class RegressionSolver extends Solver {
      * @throws Exception the exception
      *                   //TODO :: not needed?
      */
-    public static Solver getModelInstance(ModelType modelType) throws Exception {
-        switch (modelType) {
-            case LINEAR_REGRESSION:
-                return new LinearRegressionSolver();
-            case LOGISTIC_REGRESSION:
-                return new LogisticRegressionSolver();
-            default:
-                throw ExceptionUtils.getException(ExceptionConstants.EMPTY_MODEL);
-        }
-    }
-
-    /**
-     * Gets number of variables.
-     *
-     * @return the number of variables
-     */
-    public int getNumberOfVariables() {
-        return numberOfVariables;
-    }
-
-    public void setNumberOfVariables(int numberOfExamples) {
-        this.numberOfVariables = numberOfExamples;
-    }
-
-    /**
-     * Gets number of examples.
-     *
-     * @return the number of examples
-     */
-    public int getNumberOfExamples() {
-        return numberOfExamples;
-    }
-
-
-    public void setNumberOfExamples(int numberOfExamples) {
-        this.numberOfExamples = numberOfExamples;
-    }
+//    public static Solver getModelInstance(ModelType modelType) throws Exception {
+//        switch (modelType) {
+//            case LINEAR_REGRESSION:
+//                return new LinearRegressionSolver();
+//            case LOGISTIC_REGRESSION:
+//                return new LogisticRegressionSolver();
+//            default:
+//                throw ExceptionUtils.getException(ExceptionConstants.EMPTY_MODEL);
+//        }
+//    }
 
     /**
      * Load data set.
@@ -166,27 +89,53 @@ public abstract class RegressionSolver extends Solver {
      * @param header the header
      * @throws Exception the exception
      */
-    public Solver loadDataSet(String path, boolean header) throws Exception {
+    public Solver loadDataSet(String path, boolean header) {
         dataSet = FileUtils.loadData(path, header);
-        numberOfExamples = dataSet.getRows();
-        numberOfVariables = dataSet.getColumns();
-        if (numberOfVariables == 0 || numberOfExamples == 0) {
+        if (dataSet.getRows() == 0 || dataSet.getColumns() == 0) {
             throw ExceptionUtils.getException(ExceptionConstants.EMPTY_CSV_DATA);
         }
-        factors = new DenseVector(numberOfVariables);
+        // TODO :  hard-coded
+        assignTrainAndTest(false);
         return this;
-    }
-
-    public void assignTrainAndTest(double testingDataPercent, boolean randomize) {
-        this.testingDataPercent = testingDataPercent;
-        assignTrainAndTest(randomize);
     }
 
     /**
      * Assign train and test.
      */
-    public void assignTrainAndTest(boolean randomize) {
+    private void assignTrainAndTest(boolean randomize) {
+        int numberOfExamples = dataSet.getRows();
         int numberOfTestRows = (int) Math.floor(numberOfExamples * (testingDataPercent / 100));
+        int numberOfVariables = dataSet.getColumns();
+
+        Set<Integer> testIndexes = testIndexes(randomize);
+
+        trainingX = new DenseMatrix(numberOfExamples - numberOfTestRows, numberOfVariables - 1);
+        trainingY = new DenseVector(numberOfExamples - numberOfTestRows);
+        testingX = new DenseMatrix(numberOfTestRows, numberOfVariables - 1);
+        testingY = new DenseVector(numberOfTestRows);
+
+        int testIndex = 0;
+        int trainIndex = 0;
+
+        // TODO : move to matrix class
+
+        for (int i = 0; i < dataSet.getRows(); i++) {
+            if (testIndexes.contains(i)) {
+                testingX.setRow(testIndex, dataSet.getRow(i).slice(0, numberOfVariables - 1));
+                testingY.setValue(testIndex++, dataSet.value(i, numberOfVariables - 1));
+            } else {
+                trainingX.setRow(trainIndex, dataSet.getRow(i).slice(0, numberOfVariables - 1));
+                trainingY.setValue(trainIndex++, dataSet.value(i, numberOfVariables - 1));
+            }
+            // TODO: destroy not needed dataSet[i] = null;
+        }
+    }
+
+    // TODO : move to utils
+    private Set<Integer> testIndexes(boolean randomize) {
+        int numberOfExamples = dataSet.getRows();
+        int numberOfTestRows = (int) Math.floor(numberOfExamples * (testingDataPercent / 100));
+        Set<Integer> testIndexes = new HashSet<>();
         if (randomize) {
             Random random = new Random(new Date().getTime());
             while (testIndexes.size() < numberOfTestRows) {
@@ -197,179 +146,23 @@ public abstract class RegressionSolver extends Solver {
                 testIndexes.add(i);
             }
         }
-        trainingX = new DenseMatrix(numberOfExamples - numberOfTestRows, numberOfVariables - 1);
-        trainingY = new DenseVector(numberOfExamples - numberOfTestRows);
-        testingX = new DenseMatrix(numberOfTestRows, numberOfVariables - 1);
-        testingY = new DenseVector(numberOfTestRows);
-
-        int testIndex = 0;
-        int trainIndex = 0;
-
-        for (int i = 0; i < dataSet.getRows(); i++) {
-            if (testIndexes.contains(i)) {
-                testingX.setRow(testIndex, dataSet.getRow(i).slice(0, dataSet.getColumns() - 1));
-                testingY.setValue(testIndex++, dataSet.value(i, dataSet.getColumns() - 1));
-            } else {
-                trainingX.setRow(trainIndex, dataSet.getRow(i).slice(0, dataSet.getColumns() - 1));
-                trainingY.setValue(trainIndex++, dataSet.value(i, dataSet.getColumns() - 1));
-            }
-            // TODO: destroy not needed dataSet[i] = null;
-        }
+        return testIndexes;
     }
 
-    /**
-     * Get factors double [ ].
-     *
-     * @return the double [ ]
-     * <p>
-     * TODO :: not needed ? can be used from models only.
-     */
-    public Vector getFactors() {
-        return factors;
+    public Model solve() {
+        Optimizer optimizer = Optimizers.optimizer(optimizerType, entryPoint(), maxIterations, trainingX, errorType, trainingY, regularizer, regularizationCoefficient, learningRate, minDescentLimit);
+        return optimizer.optimize();
     }
 
-    /**
-     * Sets factors.
-     *
-     * @param factors the factors
-     */
-    public void setFactors(Vector factors) {
-        this.factors = factors;
-    }
-
-    /**
-     * Gets optimizer type type.
-     *
-     * @return the optimizer type type
-     */
-    public OptimizerType getOptimizerTypeType() {
-        return optimizerTypeType;
-    }
-
-    /**
-     * Sets optimizer type type.
-     *
-     * @param optimizerTypeType the optimizer type type
-     */
-    public void setOptimizerTypeType(OptimizerType optimizerTypeType) {
-        this.optimizerTypeType = optimizerTypeType;
-    }
-
-    /**
-     * Gets regularizer.
-     *
-     * @return the regularizer
-     */
-    public Regularizer getRegularizer() {
-        return regularizer;
-    }
-
-    /**
-     * Sets regularizer.
-     *
-     * @param regularizer the regularizer
-     */
-    public void setRegularizer(Regularizer regularizer) {
-        this.regularizer = regularizer;
-    }
-
-    /**
-     * Gets max iterations.
-     *
-     * @return the max iterations
-     */
-    public int getMaxIterations() {
-        return maxIterations;
-    }
-
-    /**
-     * Sets max iterations.
-     *
-     * @param maxIterations the max iterations
-     */
-    public void setMaxIterations(int maxIterations) {
-        this.maxIterations = maxIterations;
-    }
-
-    /**
-     * Gets learning rate.
-     *
-     * @return the learning rate
-     */
-    public double getLearningRate() {
-        return learningRate;
-    }
-
-    /**
-     * Sets learning rate.
-     *
-     * @param learningRate the learning rate
-     */
-    public void setLearningRate(double learningRate) {
-        this.learningRate = learningRate;
-    }
-
-    /**
-     * Gets regularization coefficient.
-     *
-     * @return the regularization coefficient
-     */
-    public double getRegularizationCoefficient() {
-        return regularizationCoefficient;
-    }
-
-    /**
-     * Sets regularization coefficient.
-     *
-     * @param regularizationCoefficient the regularization coefficient
-     */
-    public void setRegularizationCoefficient(double regularizationCoefficient) {
-        this.regularizationCoefficient = regularizationCoefficient;
-    }
-
-    /**
-     * Gets min descent limit.
-     *
-     * @return the min descent limit
-     */
-    public double getMinDescentLimit() {
-        return minDescentLimit;
-    }
-
-    /**
-     * Sets min descent limit.
-     *
-     * @param minDescentLimit the min descent limit
-     */
-    public void setMinDescentLimit(double minDescentLimit) {
-        this.minDescentLimit = minDescentLimit;
-    }
+    protected abstract DenseVector entryPoint();
 
 
-    /**
-     * Gets error type.
-     *
-     * @return the error type
-     */
-    public ErrorType getErrorType() {
-        return errorType;
-    }
-
-    /**
-     * Sets error type.
-     *
-     * @param errorType the error type
-     */
-    public void setErrorType(ErrorType errorType) {
-        this.errorType = errorType;
-    }
-
-    public Matrix getTestingX() {
-        return testingX;
-    }
-
-    // TODO : validate
-    public Vector getTestingY() {
-        return testingY;
-    }
+//    public Matrix getTestingX() {
+//        return testingX;
+//    }
+//
+//    // TODO : validate
+//    public Vector getTestingY() {
+//        return testingY;
+//    }
 }

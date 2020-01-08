@@ -5,10 +5,14 @@ import linear.algebra.statistics.Statistics;
 import linear.algebra.util.Vectors;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
+import lombok.Builder;
 import models.Model;
+import optimizer.Optimizers;
 import optimizer.grad.desc.GradientDescentOptimizer;
 import solvers.Solver;
 import solvers.regression.RegressionSolver;
+import util.constants.enums.OptimizerType;
+import util.constants.enums.Regularizer;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,21 +25,27 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
+import static util.constants.enums.OptimizerType.GRADIENT_DESCENT;
+import static util.constants.enums.Regularizer.NONE;
+
 
 /**
  * The type Linear regression solver.
  */
 public class LinearRegressionSolver extends RegressionSolver {
+
     /**
      * Instantiates a new Linear regression solver.
      */
-    public LinearRegressionSolver() {
-        this.errorType = ErrorType.MSE;
+    // TODO : hard-codin of optimizertype
+    @Builder
+    public LinearRegressionSolver(String inputFile, ErrorType errorType, Regularizer regularizer, int maxIterations, double learningRate, double regularizationCoefficient, double minDescentLimit, double testingDataPercent) throws Exception {
+        super(inputFile, errorType, GRADIENT_DESCENT, regularizer, maxIterations, learningRate, regularizationCoefficient, minDescentLimit, testingDataPercent);
     }
 
     @Override
     public Solver solve() {
-        //assignTrainAndTest();
+        // TODO : test hard-code
         DenseVector entryPoint = new DenseVector(new double[]{1, 2, 3, 4}); //Statistics.getNormalDistributionSamples(numberOfVariables);
         model = gradientDescent(entryPoint);
         return this;
@@ -65,12 +75,7 @@ public class LinearRegressionSolver extends RegressionSolver {
 
     //TODO :: needs to be moved to superclass?
     private Model gradientDescent(DenseVector entryPoint) {
-        try {
-            optimizer = new GradientDescentOptimizer(entryPoint, maxIterations, (DenseMatrix) trainingX, errorType, (DenseVector) trainingY, regularizer, regularizationCoefficient, learningRate, minDescentLimit);
-            return optimizer.optimize();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        optimizer = Optimizers.optimizer(optimizerType, entryPoint, maxIterations, trainingX, errorType, trainingY, regularizer, regularizationCoefficient, learningRate, minDescentLimit);
+        return optimizer.optimize();
     }
 }

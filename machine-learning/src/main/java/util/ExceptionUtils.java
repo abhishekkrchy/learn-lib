@@ -9,7 +9,7 @@ public class ExceptionUtils {
      * @return the exception
      * TODO :: can be implemented in a better way
      */
-    public static Exception getException(String exceptionName) {
-        return new Exception(exceptionName);
+    public static RuntimeException getException(String exceptionName) {
+        return new RuntimeException(exceptionName);
     }
 }
