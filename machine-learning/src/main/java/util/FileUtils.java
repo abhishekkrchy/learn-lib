@@ -1,7 +1,7 @@
 package util;
 
-import linear.algebra.matrices.Matrix;
 import linear.algebra.matrices.dense.DenseMatrix;
+import util.constants.exception.LearningException;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,23 +15,26 @@ import java.util.stream.Stream;
  * utility methods.
  */
 public class FileUtils {
+
+    private FileUtils() {
+
+    }
+
     /**
      * Load data list.
      *
-     * @param path          the path
-     * @param headerPresent the header present
+     * @param path the path
      * @return the list
-     * @throws IOException the io exception
+     * @throws LearningException the io exception
      */
-    public static Matrix loadData(String path, boolean headerPresent) {
-        // TODO : remove exception from here and try with resources
-        try {
-            return new DenseMatrix(Files.lines(Paths.get(new File(path).toURI()))
+    public static Data loadData(String path, double testingDataPercent) {
+        try (Stream<String> lines = Files.lines(Paths.get(new File(path).toURI()))) {
+            return new Data(new DenseMatrix(lines
                     .map(line -> line.trim().split(","))
                     .map(word -> Stream.of(word).mapToDouble(Double::parseDouble).toArray())
-                    .toArray(double[][]::new));
+                    .toArray(double[][]::new)), testingDataPercent);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new LearningException(e);
         }
     }
 }

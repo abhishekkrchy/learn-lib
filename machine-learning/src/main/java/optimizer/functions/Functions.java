@@ -1,9 +1,9 @@
 package optimizer.functions;
 
 import linear.algebra.expressions.Polynomial;
-import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
+import util.Data;
 import util.constants.enums.Regularizer;
 
 import java.util.Arrays;
@@ -29,11 +29,11 @@ public class Functions {
      * @param varIndex                  the variable index
      * @return the marked node
      */
-    public static Polynomial markedLossFunction(DenseMatrix training, DenseVector factors, DenseVector trainingY, Regularizer regularizer, double regularizationCoefficient, ErrorType errorType, int varIndex) {
-        Polynomial[] estimatedValue = training.addColumn(0, 1).multiplyWithVariable(factors, varIndex);
+    public static Polynomial markedLossFunction(Data data, DenseVector factors, Regularizer regularizer, double regularizationCoefficient, ErrorType errorType, int varIndex) {
+        Polynomial[] estimatedValue = data.trainingX().addColumn(0, 1).multiplyWithVariable(factors, varIndex);
         if (errorType == ErrorType.MSE) {
-            for (int i = 0; i < trainingY.size(); i++) {
-                estimatedValue[i].term(-1 * trainingY.value(i));
+            for (int i = 0; i < data.trainingY().size(); i++) {
+                estimatedValue[i].term(-1 * data.trainYVal(i));
             }
             return Arrays.stream(estimatedValue)
                     .map(Polynomial::squared)

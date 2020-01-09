@@ -1,8 +1,8 @@
 package solvers;
 
-import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
+import util.Data;
 
 /**
  * Created by abhishek on 29/9/16.
@@ -25,16 +25,11 @@ public abstract class Solver {
     /**
      * Load data set.
      *
-     * @param path   the path
-     * @param header the header
      * @return the solver
-     * @throws Exception the exception
      */
-    public abstract Solver loadDataSet(boolean header) throws Exception;
+    public abstract Solver loadDataSet();
 
-    public abstract DenseMatrix getTestingX();
-
-    public abstract DenseVector getTestingY();
+    public abstract Data getData();
 
     protected abstract DenseVector entryPoint();
 }

@@ -20,8 +20,8 @@ public class LinearRegressionExample {
                 .build();
 
         Model model = linearRegressionSolver.solve();
-        DenseVector predictions = model.predict(linearRegressionSolver.getTestingX());
+        DenseVector predictions = model.predict(linearRegressionSolver.getData().testingX());
         log.info("Predictions : " + predictions);
-        log.info("Regression mse : " + Errors.type(ErrorType.MSE).apply(linearRegressionSolver.getTestingY(), predictions));
+        log.info("Regression mse : " + Errors.type(ErrorType.MSE).apply(linearRegressionSolver.getData().testingY(), predictions));
     }
 }

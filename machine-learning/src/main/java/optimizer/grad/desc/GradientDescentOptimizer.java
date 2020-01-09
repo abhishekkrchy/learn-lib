@@ -1,7 +1,6 @@
 package optimizer.grad.desc;
 
 import linear.algebra.expressions.Polynomial;
-import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.statistics.errors.Errors;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
@@ -10,6 +9,7 @@ import models.Model;
 import models.RegressionModel;
 import optimizer.Optimizer;
 import optimizer.functions.Functions;
+import util.Data;
 import util.constants.enums.Regularizer;
 
 @Slf4j
@@ -17,20 +17,18 @@ public class GradientDescentOptimizer implements Optimizer {
 
     private DenseVector initial;
     private int maxIterations;
-    private DenseMatrix trainingX;
     private ErrorType errorType;
-    private DenseVector trainingY;
+    private Data data;
     private Regularizer regularizer;
     private double regularizationCoefficient;
     private double learningRate;
     private double minDescentLimit;
 
-    public GradientDescentOptimizer(DenseVector initial, int maxIterations, DenseMatrix trainingX, ErrorType errorType, DenseVector trainingY, Regularizer regularizer, double regularizationCoefficient, double learningRate, double minDescentLimit) {
+    public GradientDescentOptimizer(DenseVector initial, int maxIterations, ErrorType errorType, Data data, Regularizer regularizer, double regularizationCoefficient, double learningRate, double minDescentLimit) {
         this.initial = initial;
         this.maxIterations = maxIterations;
-        this.trainingX = trainingX;
         this.errorType = errorType;
-        this.trainingY = trainingY;
+        this.data = data;
         this.regularizer = regularizer;
         this.regularizationCoefficient = regularizationCoefficient;
         this.learningRate = learningRate;
@@ -40,7 +38,7 @@ public class GradientDescentOptimizer implements Optimizer {
     private DenseVector findDelta(DenseVector factors) {
         DenseVector delta = new DenseVector(factors.size());
         for (int i = 0; i < factors.size(); i++) {
-            Polynomial loss = Functions.markedLossFunction(trainingX, factors, trainingY, regularizer, regularizationCoefficient, errorType, i);
+            Polynomial loss = Functions.markedLossFunction(data, factors, regularizer, regularizationCoefficient, errorType, i);
             log.debug("factors, index and loss : {} --  {} --- {}", factors, i, loss);
             double derivativeValue = loss.derivative(factors.value(i));
             log.debug("Loss function derivative is : {} {}", loss.derivative(), derivativeValue);
@@ -58,13 +56,13 @@ public class GradientDescentOptimizer implements Optimizer {
     }
 
     private double error(ErrorType errorType, DenseVector factors) {
-        return Errors.type(errorType).apply(trainingX.multiplyAndAddIntercept(factors), trainingY);
+        return Errors.type(errorType).apply(data.trainingX().multiplyAndAddIntercept(factors), data.trainingY());
     }
 
 
     @Override
     public Model optimize() {
-        log.debug("trainingX,trainingY,testX & testY : {} {}", trainingX, trainingY);
+        log.debug("trainingX,trainingY,testX & testY : {} {}", data.trainingX(), data.trainingY());
         int iterations = 0;
         DenseVector factors = initial;
 
