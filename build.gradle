@@ -1,0 +1,33 @@
+allprojects {
+    group = 'com.learn-lib'
+    version = '1.0.0'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    repositories {
+        mavenLocal()
+        maven {
+            url = 'http://repo.maven.apache.org/maven2'
+        }
+    }
+
+    dependencies {
+        compile 'org.slf4j:slf4j-api:1.7.25'
+        compile 'junit:junit:4.12'
+        compileOnly 'org.projectlombok:lombok:1.18.10'
+        annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    }
+
+    sourceCompatibility = '1.8'
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from(components.java)
+            }
+        }
+    }
+}

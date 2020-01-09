@@ -26,7 +26,7 @@ public class Functions {
      * @param regularizer               the regularizer
      * @param regularizationCoefficient the regularization coefficient
      * @param errorType                 the error type
-     * @param varPos                    the variable pos
+     * @param varIndex                  the variable index
      * @return the marked node
      */
     public static Polynomial markedLossFunction(DenseMatrix training, DenseVector factors, DenseVector trainingY, Regularizer regularizer, double regularizationCoefficient, ErrorType errorType, int varIndex) {
