@@ -1,12 +1,9 @@
 package linear.algebra.statistics.errors;
 
-import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by abhishek on 24/05/17.

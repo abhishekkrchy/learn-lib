@@ -96,25 +96,6 @@ public class RegressionSolver extends Solver {
     }
 
     /**
-     * Gets model instance.
-     *
-     * @param modelType the model type name
-     * @return the model instance
-     * @throws Exception the exception
-     *                   //TODO :: not needed?
-     */
-//    public static Solver getSolver(ModelType modelType) throws Exception {
-//        switch (modelType) {
-//            case LINEAR_REGRESSION:
-//                return new LinearRegressionSolver();
-//            case LOGISTIC_REGRESSION:
-//                return new LogisticRegressionSolver();
-//            default:
-//                throw ExceptionUtils.getException(ExceptionConstants.EMPTY_MODEL);
-//        }
-//    }
-
-    /**
      * Load data set.
      *
      * @param path   the path
