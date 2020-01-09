@@ -1,77 +1,20 @@
 package models;
 
+import linear.algebra.matrices.Matrix;
 import linear.algebra.vectors.dense.DenseVector;
-import util.ExceptionUtils;
-import util.FileUtils;
-import util.ModelUtils;
-import util.constants.exception.ExceptionConstants;
+import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@AllArgsConstructor
 public class RegressionModel implements Model {
-    private boolean modelBuilt;
-    private DenseVector factors;
-    private double intercept;
+
+    private final DenseVector factors;
 
     @Override
-    public double predict(Object values) throws Exception {
-        DenseVector denseVector = (DenseVector) values;
-        if (!modelBuilt)
-            throw ExceptionUtils.getException(ExceptionConstants.MODEL_NOT_BUILT);
-        double output = intercept;
-        for (int i=0;i<factors.size();i++) {
-            output += factors.value(i) * denseVector.value(i++);
+    public DenseVector predict(Matrix values) {
+        DenseVector predictions = new DenseVector(values.numRows());
+        for (int i = 0; i < values.numRows(); i++) {
+            predictions.setValue(i, values.getRow(i).dotProduct(factors.tail()) + factors.head());
         }
-        return output;
-    }
-
-    @Override
-    public void predict(String inpath, String outpath, boolean header) throws Exception {
-        List<List<Double>> dataSet = FileUtils.loadData(inpath, header);
-        List<Double> predictions = new ArrayList<>(dataSet.size());
-        for (List<Double> data : dataSet) {
-            predictions.add(predict(data));
-        }
-        ModelUtils.writePredictions(predictions, outpath);
-    }
-
-    @Override
-    public void export(String path) {
-
-    }
-
-    @Override
-    public void load(String path) {
-
-    }
-
-    @Override
-    public void build() {
-
-    }
-
-    public boolean isModelBuilt() {
-        return modelBuilt;
-    }
-
-    public void setModelBuilt(boolean modelBuilt) {
-        this.modelBuilt = modelBuilt;
-    }
-
-    public DenseVector getFactors() {
-        return factors;
-    }
-
-    public void setFactors(DenseVector factors) {
-        this.factors = factors;
-    }
-
-    public double getIntercept() {
-        return intercept;
-    }
-
-    public void setIntercept(double intercept) {
-        this.intercept = intercept;
+        return predictions;
     }
 }

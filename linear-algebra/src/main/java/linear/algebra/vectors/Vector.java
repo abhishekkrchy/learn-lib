@@ -1,4 +1,7 @@
-package linear.algebra;
+package linear.algebra.vectors;
+
+import linear.algebra.expressions.Polynomial;
+import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +38,10 @@ public abstract class Vector {
      */
     public abstract double value(int index);
 
+    public abstract void setValue(int index, double value);
+
+    public abstract DenseVector allExcept(int index);
+
     /**
      * Method for getting {@link Iterator} of
      * {@link Double} which returns the sequential
@@ -53,6 +60,14 @@ public abstract class Vector {
      * created using the sliced values.
      */
     public abstract Vector slice(int fromIndex, int toIndex);
+
+    public abstract double dotProduct(Vector other);
+
+    public abstract Polynomial dotProductWithVariable(Vector other, int varPos);
+
+    public abstract double head();
+
+    public abstract DenseVector tail();
 
     /**
      * Method to generate a primitive stream

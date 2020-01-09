@@ -1,6 +1,6 @@
 package linear.algebra.statistics.errors;
 
-import linear.algebra.util.MarkedNode;
+import linear.algebra.expressions.Polynomial;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
 
@@ -14,6 +14,11 @@ import java.util.function.Function;
  * errors.
  */
 public class Errors {
+
+    private Errors() {
+
+    }
+
     /**
      * The function ERROR_FUNCTION
      * which when applied with an arguement
@@ -23,13 +28,18 @@ public class Errors {
      * returns a {@link Double} which is the
      * calculated error.
      */
-    public static Function<ErrorType, BiFunction<DenseVector, DenseVector, Double>> ERROR_FUNCTION = errorType -> (denseVector, denseVector2) -> {
+    public static BiFunction<DenseVector, DenseVector, Double> type(ErrorType errorType) {
         switch (errorType) {
             case MSE:
             default:
-                return MeanSquaredError.error(denseVector, denseVector2);
+                return MeanSquaredError::error;
         }
-    };
+    }
+
+
+    public static BiFunction<DenseVector, DenseVector, Polynomial> markedType(ErrorType errorType, int varIndex) {
+        return MARKED_ERROR_FUNCTION.apply(errorType).apply(varIndex);
+    }
 
     /**
      * The function MARKED_ERROR_FUNCTION
@@ -39,14 +49,14 @@ public class Errors {
      * {@link Integer} (which is the variable index)
      * is passed as arguement produces a {@link BiFunction}
      * which takes two {@link DenseVector}s and when
-     * applied returns a {@link MarkedNode} which is the
+     * applied returns a {@link Polynomial} which is the
      * calculated error.
      */
-    public static Function<ErrorType, Function<Integer, BiFunction<DenseVector, DenseVector, MarkedNode>>> MARKED_ERROR_FUNCTION = errorType -> integer -> (BiFunction<DenseVector, DenseVector, MarkedNode>) (denseVector, denseVector2) -> {
+    private static final Function<ErrorType, Function<Integer, BiFunction<DenseVector, DenseVector, Polynomial>>> MARKED_ERROR_FUNCTION = errorType -> varIndex -> (BiFunction<DenseVector, DenseVector, Polynomial>) (denseVector, denseVector2) -> {
         switch (errorType) {
             case MSE:
             default:
-                return MeanSquaredError.error(denseVector, denseVector2, integer);
+                return MeanSquaredError.error(denseVector, denseVector2, varIndex);
         }
     };
 

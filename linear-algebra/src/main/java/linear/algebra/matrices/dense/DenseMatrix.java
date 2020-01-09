@@ -1,11 +1,15 @@
 package linear.algebra.matrices.dense;
 
-import linear.algebra.Matrix;
+import linear.algebra.expressions.Polynomial;
+import linear.algebra.matrices.Matrix;
+import linear.algebra.util.ExceptionUtils;
+import linear.algebra.util.Vectors;
+import linear.algebra.util.constants.exception.ExceptionConstants;
+import linear.algebra.vectors.Vector;
 import linear.algebra.vectors.dense.DenseVector;
 
-import java.util.Arrays;
-
 public class DenseMatrix extends Matrix {
+
     private double[][] values;
 
     /**
@@ -42,6 +46,13 @@ public class DenseMatrix extends Matrix {
     }
 
     @Override
+    public void setRow(int row, Vector rowContents) {
+        for (int i = 0; i < rowContents.size(); i++) {
+            values[row][i] = rowContents.value(i);
+        }
+    }
+
+    @Override
     public DenseMatrix transpose() {
         double[][] transposed = new double[values[0].length][values.length];
         for (int i = 0; i < values.length; i++) {
@@ -52,16 +63,58 @@ public class DenseMatrix extends Matrix {
         return new DenseMatrix(transposed);
     }
 
+    @Override
     public DenseVector getRow(int index) {
         return new DenseVector(values[index]);
     }
 
+    @Override
     public DenseVector getColumn(int index) {
         double[] column = new double[rows];
         for (int i = 0; i < rows; i++) {
-            column[i] = value(i,index);
+            column[i] = value(i, index);
         }
         return new DenseVector(column);
     }
 
+    @Override
+    public Matrix addColumn(int columnIndex, double defaultValue) {
+        double[][] doubles = new double[numRows()][numColumns() + 1];
+        for (int i = 0; i < numRows(); i++) {
+            doubles[i][columnIndex] = defaultValue;
+            // TODO : shift all columns after
+            for (int j = 0; j < numColumns(); j++) {
+                doubles[i][j + 1] = value(i, j);
+            }
+        }
+        return new DenseMatrix(doubles);
+    }
+
+    public DenseVector multiply(Vector vector) {
+        checkCompatibility(vector);
+        double[] result = new double[vector.size()];
+        for (int i = 0; i < vector.size(); i++) {
+            result[i] = getRow(i).dotProduct(vector);
+        }
+        return new DenseVector(result);
+    }
+
+    public DenseVector multiplyAndAddIntercept(Vector vector) {
+        DenseVector product = multiply(vector.tail());
+        return Vectors.toDenseVector(product.stream().map(x -> x + vector.head()));
+    }
+
+    public Polynomial[] multiplyWithVariable(Vector vector, int varPos) {
+        Polynomial[] result = new Polynomial[vector.size() - 1];
+        for (int i = 0; i < vector.size() - 1; i++) {
+            result[i] = getRow(i).dotProductWithVariable(vector, varPos);
+        }
+        return result;
+    }
+
+    private void checkCompatibility(Vector vector) {
+        if (numColumns() != vector.size()) {
+            throw ExceptionUtils.getException(ExceptionConstants.INCOMPATIBLE_MATRICES);
+        }
+    }
 }

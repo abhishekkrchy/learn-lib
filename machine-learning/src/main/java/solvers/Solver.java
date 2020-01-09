@@ -1,5 +1,7 @@
 package solvers;
 
+import linear.algebra.matrices.dense.DenseMatrix;
+import linear.algebra.vectors.dense.DenseVector;
 import models.Model;
 
 /**
@@ -18,7 +20,7 @@ public abstract class Solver {
      *
      * @return the solver
      */
-    public abstract Solver solve();
+    public abstract Model solve();
 
     /**
      * Load data set.
@@ -28,21 +30,11 @@ public abstract class Solver {
      * @return the solver
      * @throws Exception the exception
      */
-    public abstract Solver loadDataSet(String path, boolean header) throws Exception;
+    public abstract Solver loadDataSet(boolean header) throws Exception;
 
-    /**
-     * Assign train and test.
-     *
-     * @param testingDataPercent the testing data percent
-     */
-    public abstract void assignTrainAndTest(double testingDataPercent);
+    public abstract DenseMatrix getTestingX();
 
-    /**
-     * Gets model.
-     *
-     * @return the model
-     */
-    public abstract Model getModel();
+    public abstract DenseVector getTestingY();
 
-    public abstract void predict(String opFilePath,boolean headers) throws Exception;
+    protected abstract DenseVector entryPoint();
 }

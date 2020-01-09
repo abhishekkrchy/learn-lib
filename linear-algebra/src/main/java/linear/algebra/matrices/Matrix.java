@@ -1,4 +1,7 @@
-package linear.algebra;
+package linear.algebra.matrices;
+
+import linear.algebra.expressions.Polynomial;
+import linear.algebra.vectors.Vector;
 
 public abstract class Matrix {
 
@@ -40,12 +43,14 @@ public abstract class Matrix {
      */
     public abstract double value(int row, int column);
 
+    public abstract void setRow(int row, Vector rowContents);
+
     /**
      * Gets number of rows.
      *
      * @return the rows' count
      */
-    public int getRows() {
+    public int numRows() {
         return rows;
     }
 
@@ -54,7 +59,7 @@ public abstract class Matrix {
      *
      * @return the columns' count
      */
-    public int getColumns() {
+    public int numColumns() {
         return columns;
     }
 
@@ -78,6 +83,18 @@ public abstract class Matrix {
      * @return the transposed matrix
      */
     public abstract Matrix transpose();
+
+    public abstract Vector getRow(int index);
+
+    public abstract Vector getColumn(int index);
+
+    public abstract Matrix addColumn(int columnIndex, double value);
+
+    public abstract Vector multiply(Vector vector);
+
+    public abstract Vector multiplyAndAddIntercept(Vector vector);
+
+    public abstract Polynomial[] multiplyWithVariable(Vector vector, int varPos);
 
     @Override
     public String toString() {

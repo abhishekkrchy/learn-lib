@@ -1,6 +1,8 @@
 package linear.algebra.matrices.sparse;
 
-import linear.algebra.Matrix;
+import linear.algebra.expressions.Polynomial;
+import linear.algebra.matrices.Matrix;
+import linear.algebra.vectors.Vector;
 
 /**
  * This class is the representation for a
@@ -51,9 +53,46 @@ public class CRSMatrix extends Matrix {
         return 0;
     }
 
+    @Override
+    public void setRow(int row, Vector rowContents) {
+        // TODO
+    }
+
 
     @Override
     public Matrix transpose() {
         return new CSCMatrix(rows, columns, values, columnNums, rowPointers);
+    }
+
+    @Override
+    public Vector getRow(int index) {
+        // TODO
+        return null;
+    }
+
+    @Override
+    public Vector getColumn(int index) {
+        // TODO
+        return null;
+    }
+
+    @Override
+    public Matrix addColumn(int columnIndex, double values) {
+        return null;
+    }
+
+    @Override
+    public Vector multiply(Vector vector) {
+        return null;
+    }
+
+    @Override
+    public Vector multiplyAndAddIntercept(Vector vector) {
+        return null;
+    }
+
+    @Override
+    public Polynomial[] multiplyWithVariable(Vector vector, int varPos) {
+        return new Polynomial[0];
     }
 }

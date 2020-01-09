@@ -1,6 +1,7 @@
 package linear.algebra.vectors.sparse;
 
-import linear.algebra.Vector;
+import linear.algebra.expressions.Polynomial;
+import linear.algebra.vectors.Vector;
 import linear.algebra.vectors.dense.DenseVector;
 
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class SparseVector extends Vector {
 
     }
 
-    public SparseVector(DenseVector denseVector){
+    public SparseVector(DenseVector denseVector) {
         this(denseVector.stream().toArray());
     }
 
@@ -46,12 +47,42 @@ public class SparseVector extends Vector {
     }
 
     @Override
+    public void setValue(int index, double value) {
+        // TODO
+    }
+
+    @Override
+    public DenseVector allExcept(int index) {
+        return null;
+    }
+
+    @Override
     public Iterator<Double> iterator() {
         return null;
     }
 
     @Override
     public Vector slice(int fromIndex, int toIndex) {
+        return null;
+    }
+
+    @Override
+    public double dotProduct(Vector other) {
+        return 0;
+    }
+
+    @Override
+    public Polynomial dotProductWithVariable(Vector other, int varPos) {
+        return null;
+    }
+
+    @Override
+    public double head() {
+        return 0;
+    }
+
+    @Override
+    public DenseVector tail() {
         return null;
     }
 

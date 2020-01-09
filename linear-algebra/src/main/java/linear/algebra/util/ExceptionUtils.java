@@ -1,7 +1,8 @@
 package linear.algebra.util;
 
+// TODO :
 public class ExceptionUtils {
-    public static Exception getException(String exceptionName) {
-        return new Exception(exceptionName);
+    public static RuntimeException getException(String exceptionName) {
+        return new RuntimeException(exceptionName);
     }
 }

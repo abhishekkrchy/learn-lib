@@ -1,0 +1,4 @@
+rootProject.name = 'learn-lib'
+include(':linear-algebra')
+include(':machine-learning')
+include(':examples')

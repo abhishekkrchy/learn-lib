@@ -7,7 +7,8 @@ public enum ModelType {
     /**
      * Logistic regression name.
      */
-    LOGISTIC_REGRESSION, /**
+    LOGISTIC_REGRESSION,
+    /**
      * Linear regression name.
      */
     LINEAR_REGRESSION

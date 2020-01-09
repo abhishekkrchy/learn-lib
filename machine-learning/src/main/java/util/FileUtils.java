@@ -1,12 +1,13 @@
 package util;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import linear.algebra.matrices.Matrix;
+import linear.algebra.matrices.dense.DenseMatrix;
+
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 /**
  * The File utils class
@@ -22,16 +23,15 @@ public class FileUtils {
      * @return the list
      * @throws IOException the io exception
      */
-    public static List<List<Double>> loadData(String path, boolean headerPresent) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
-        String curr;
-        if (headerPresent)
-            bufferedReader.readLine();
-        List<List<Double>> csvData = new ArrayList<>();
-        while ((curr = bufferedReader.readLine()) != null) {
-            List<Double> row = Arrays.stream(curr.split(",")).map(Double::parseDouble).collect(Collectors.toList());
-            csvData.add(row);
+    public static Matrix loadData(String path, boolean headerPresent) {
+        // TODO : remove exception from here and try with resources
+        try {
+            return new DenseMatrix(Files.lines(Paths.get(new File(path).toURI()))
+                    .map(line -> line.trim().split(","))
+                    .map(word -> Stream.of(word).mapToDouble(Double::parseDouble).toArray())
+                    .toArray(double[][]::new));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return csvData;
     }
 }
