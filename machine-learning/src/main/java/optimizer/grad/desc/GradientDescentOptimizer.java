@@ -9,10 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import models.Model;
 import models.RegressionModel;
 import optimizer.Optimizer;
-import optimizer.functions.Regularizers;
+import optimizer.functions.Functions;
 import util.constants.enums.Regularizer;
-
-import java.util.Arrays;
 
 @Slf4j
 public class GradientDescentOptimizer implements Optimizer {
@@ -39,21 +37,11 @@ public class GradientDescentOptimizer implements Optimizer {
         this.minDescentLimit = minDescentLimit;
     }
 
-    private Polynomial[] polynomialError(DenseMatrix training, DenseVector factors, int varPos, DenseVector trainingY) {
-        Polynomial[] products = training.addColumn(1).multiplyWithVariable(factors, varPos);
-        for (int i = 0; i < trainingY.size(); i++) {
-            products[i].term(-1 * trainingY.value(i));
-        }
-        return Arrays.stream(products).map(Polynomial::squared).map(x -> x.divideCoefficients(products.length)).toArray(Polynomial[]::new);
-    }
-
     private DenseVector findDelta(DenseVector factors) {
         DenseVector delta = new DenseVector(factors.size());
         for (int i = 0; i < factors.size(); i++) {
-            Polynomial loss = Arrays.stream(polynomialError(trainingX, factors, i, trainingY)).reduce(new Polynomial(2), Polynomial::add);
-            // TODO : check
-            loss.term(Regularizers.regularize(factors, regularizer, regularizationCoefficient));
-            log.debug("factors, i & polynomial errors and loss :{} --  {} --- {}  --- {}", factors, i, Arrays.toString(polynomialError(trainingX, factors, i, trainingY)), loss);
+            Polynomial loss = Functions.markedLossFunction(trainingX, factors, trainingY, regularizer, regularizationCoefficient, errorType, i);
+            log.debug("factors, index and loss : {} --  {} --- {}", factors, i, loss);
             double derivativeValue = loss.derivative(factors.value(i));
             log.debug("Loss function derivative is : {} {}", loss.derivative(), derivativeValue);
             delta.setValue(i, derivativeValue);
