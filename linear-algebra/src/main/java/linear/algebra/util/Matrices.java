@@ -20,12 +20,12 @@ public class Matrices {
      * @throws Exception dimensions incompatible exception
      */
     public static Matrix multiply(DenseMatrix matrix1, DenseMatrix matrix2) throws Exception {
-        checkCompatibility(matrix1.getColumns(), matrix2.getRows());
-        double[][] productMatrixValues = new double[matrix1.getRows()][matrix2.getColumns()];
-        for (int i = 0; i < matrix1.getRows(); i++) {
-            for (int j = 0; j < matrix2.getColumns(); j++) {
-                for (int k = 0; k < matrix1.getRows(); k++) {
-                    for (int l = 0; l < matrix1.getColumns(); l++) {
+        checkCompatibility(matrix1.numColumns(), matrix2.numRows());
+        double[][] productMatrixValues = new double[matrix1.numRows()][matrix2.numColumns()];
+        for (int i = 0; i < matrix1.numRows(); i++) {
+            for (int j = 0; j < matrix2.numColumns(); j++) {
+                for (int k = 0; k < matrix1.numRows(); k++) {
+                    for (int l = 0; l < matrix1.numColumns(); l++) {
                         productMatrixValues[i][j] += matrix1.value(k, l) * matrix2.value(l, k);
                     }
                 }

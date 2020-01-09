@@ -11,8 +11,8 @@ public class RegressionModel implements Model {
 
     @Override
     public DenseVector predict(Matrix values) {
-        DenseVector predictions = new DenseVector(values.getRows());
-        for (int i = 0; i < values.getRows(); i++) {
+        DenseVector predictions = new DenseVector(values.numRows());
+        for (int i = 0; i < values.numRows(); i++) {
             predictions.setValue(i, values.getRow(i).dotProduct(factors.tail()) + factors.head());
         }
         return predictions;

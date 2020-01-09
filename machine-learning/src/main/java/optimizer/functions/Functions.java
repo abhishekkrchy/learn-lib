@@ -30,7 +30,7 @@ public class Functions {
      * @return the marked node
      */
     public static Polynomial markedLossFunction(DenseMatrix training, DenseVector factors, DenseVector trainingY, Regularizer regularizer, double regularizationCoefficient, ErrorType errorType, int varIndex) {
-        Polynomial[] estimatedValue = training.addColumn(1).multiplyWithVariable(factors, varIndex);
+        Polynomial[] estimatedValue = training.addColumn(0, 1).multiplyWithVariable(factors, varIndex);
         if (errorType == ErrorType.MSE) {
             for (int i = 0; i < trainingY.size(); i++) {
                 estimatedValue[i].term(-1 * trainingY.value(i));

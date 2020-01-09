@@ -104,7 +104,7 @@ public class RegressionSolver extends Solver {
      */
     public Solver loadDataSet(boolean header) {
         dataSet = FileUtils.loadData(inputFile, header);
-        if (dataSet.getRows() == 0 || dataSet.getColumns() == 0) {
+        if (dataSet.numRows() == 0 || dataSet.numColumns() == 0) {
             throw ExceptionUtils.getException(ExceptionConstants.EMPTY_CSV_DATA);
         }
         // TODO :  hard-coded
@@ -116,9 +116,9 @@ public class RegressionSolver extends Solver {
      * Assign train and test.
      */
     private void assignTrainAndTest(boolean randomize) {
-        int numberOfExamples = dataSet.getRows();
+        int numberOfExamples = dataSet.numRows();
         int numberOfTestRows = (int) Math.floor(numberOfExamples * (testingDataPercent / 100));
-        int numberOfVariables = dataSet.getColumns();
+        int numberOfVariables = dataSet.numColumns();
 
         Set<Integer> testIndexes = testIndexes(randomize);
 
@@ -132,7 +132,7 @@ public class RegressionSolver extends Solver {
 
         // TODO : move to matrix class
 
-        for (int i = 0; i < dataSet.getRows(); i++) {
+        for (int i = 0; i < dataSet.numRows(); i++) {
             if (testIndexes.contains(i)) {
                 testingX.setRow(testIndex, dataSet.getRow(i).slice(0, numberOfVariables - 1));
                 testingY.setValue(testIndex++, dataSet.value(i, numberOfVariables - 1));
@@ -146,7 +146,7 @@ public class RegressionSolver extends Solver {
 
     // TODO : move to utils
     private Set<Integer> testIndexes(boolean randomize) {
-        int numberOfExamples = dataSet.getRows();
+        int numberOfExamples = dataSet.numRows();
         int numberOfTestRows = (int) Math.floor(numberOfExamples * (testingDataPercent / 100));
         Set<Integer> testIndexes = new HashSet<>();
         if (randomize) {

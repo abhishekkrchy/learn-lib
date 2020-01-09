@@ -9,6 +9,7 @@ import linear.algebra.vectors.Vector;
 import linear.algebra.vectors.dense.DenseVector;
 
 public class DenseMatrix extends Matrix {
+
     private double[][] values;
 
     /**
@@ -45,11 +46,6 @@ public class DenseMatrix extends Matrix {
     }
 
     @Override
-    public void setValue(int row, int column, double value) {
-        values[row][column] = value;
-    }
-
-    @Override
     public void setRow(int row, Vector rowContents) {
         for (int i = 0; i < rowContents.size(); i++) {
             values[row][i] = rowContents.value(i);
@@ -82,11 +78,12 @@ public class DenseMatrix extends Matrix {
     }
 
     @Override
-    public Matrix addColumn(double defaultValue) {
-        double[][] doubles = new double[getRows()][getColumns() + 1];
-        for (int i = 0; i < getRows(); i++) {
-            doubles[i][0] = defaultValue;
-            for (int j = 0; j < getColumns(); j++) {
+    public Matrix addColumn(int columnIndex, double defaultValue) {
+        double[][] doubles = new double[numRows()][numColumns() + 1];
+        for (int i = 0; i < numRows(); i++) {
+            doubles[i][columnIndex] = defaultValue;
+            // TODO : shift all columns after
+            for (int j = 0; j < numColumns(); j++) {
                 doubles[i][j + 1] = value(i, j);
             }
         }
@@ -116,7 +113,7 @@ public class DenseMatrix extends Matrix {
     }
 
     private void checkCompatibility(Vector vector) {
-        if (getColumns() != vector.size()) {
+        if (numColumns() != vector.size()) {
             throw ExceptionUtils.getException(ExceptionConstants.INCOMPATIBLE_MATRICES);
         }
     }

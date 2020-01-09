@@ -43,8 +43,6 @@ public abstract class Matrix {
      */
     public abstract double value(int row, int column);
 
-    public abstract void setValue(int row, int column, double value);
-
     public abstract void setRow(int row, Vector rowContents);
 
     /**
@@ -52,7 +50,7 @@ public abstract class Matrix {
      *
      * @return the rows' count
      */
-    public int getRows() {
+    public int numRows() {
         return rows;
     }
 
@@ -61,7 +59,7 @@ public abstract class Matrix {
      *
      * @return the columns' count
      */
-    public int getColumns() {
+    public int numColumns() {
         return columns;
     }
 
@@ -90,8 +88,7 @@ public abstract class Matrix {
 
     public abstract Vector getColumn(int index);
 
-    // TODO : maye add col pos
-    public abstract Matrix addColumn(double values);
+    public abstract Matrix addColumn(int columnIndex, double value);
 
     public abstract Vector multiply(Vector vector);
 

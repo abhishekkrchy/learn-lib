@@ -53,11 +53,6 @@ public class CSCMatrix extends Matrix {
     }
 
     @Override
-    public void setValue(int row, int column, double value) {
-        // TODO
-    }
-
-    @Override
     public void setRow(int row, Vector rowContents) {
         // TODO
     }
@@ -79,7 +74,7 @@ public class CSCMatrix extends Matrix {
     }
 
     @Override
-    public Matrix addColumn(double values) {
+    public Matrix addColumn(int columnIndex, double value) {
         return null;
     }
 
