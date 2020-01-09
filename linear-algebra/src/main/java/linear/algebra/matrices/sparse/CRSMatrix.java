@@ -1,5 +1,6 @@
 package linear.algebra.matrices.sparse;
 
+import linear.algebra.expressions.Polynomial;
 import linear.algebra.matrices.Matrix;
 import linear.algebra.vectors.Vector;
 
@@ -78,5 +79,25 @@ public class CRSMatrix extends Matrix {
     public Vector getColumn(int index) {
         // TODO
         return null;
+    }
+
+    @Override
+    public Matrix addColumn(double values) {
+        return null;
+    }
+
+    @Override
+    public Vector multiply(Vector vector) {
+        return null;
+    }
+
+    @Override
+    public Vector multiplyAndAddIntercept(Vector vector) {
+        return null;
+    }
+
+    @Override
+    public Polynomial[] multiplyWithVariable(Vector vector, int varPos) {
+        return new Polynomial[0];
     }
 }

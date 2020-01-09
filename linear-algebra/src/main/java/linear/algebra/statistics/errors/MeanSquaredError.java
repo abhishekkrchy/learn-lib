@@ -15,7 +15,7 @@ class MeanSquaredError {
      * @param denseVector2 the dense vector 2
      * @return the double
      */
-    public static double error(DenseVector denseVector1, DenseVector denseVector2) {
+    static double error(DenseVector denseVector1, DenseVector denseVector2) {
         double total = 0.0;
         for (int i = 0; i < denseVector1.size(); i++) {
             total += Math.pow(denseVector1.value(i) - denseVector2.value(i), 2.0);
@@ -31,7 +31,7 @@ class MeanSquaredError {
      * @param varPos       the var pos
      * @return the marked node
      */
-    public static Polynomial error(DenseVector denseVector1, DenseVector denseVector2, int varPos) {
+    static Polynomial error(DenseVector denseVector1, DenseVector denseVector2, int varPos) {
         Polynomial polynomial = new Polynomial(2);
 
         double total = 0.0;

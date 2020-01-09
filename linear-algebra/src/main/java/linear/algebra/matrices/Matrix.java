@@ -93,8 +93,9 @@ public abstract class Matrix {
     // TODO : maye add col pos
     public abstract Matrix addColumn(double values);
 
-
     public abstract Vector multiply(Vector vector);
+
+    public abstract Vector multiplyAndAddIntercept(Vector vector);
 
     public abstract Polynomial[] multiplyWithVariable(Vector vector, int varPos);
 

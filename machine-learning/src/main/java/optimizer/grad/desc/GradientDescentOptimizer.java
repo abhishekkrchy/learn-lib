@@ -3,17 +3,18 @@ package optimizer.grad.desc;
 import linear.algebra.expressions.Polynomial;
 import linear.algebra.matrices.dense.DenseMatrix;
 import linear.algebra.statistics.errors.Errors;
-import linear.algebra.util.Vectors;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
+import lombok.extern.slf4j.Slf4j;
 import models.Model;
 import models.RegressionModel;
 import optimizer.Optimizer;
+import optimizer.functions.Regularizers;
 import util.constants.enums.Regularizer;
 
 import java.util.Arrays;
 
-
+@Slf4j
 public class GradientDescentOptimizer implements Optimizer {
 
     private DenseVector initial;
@@ -38,69 +39,61 @@ public class GradientDescentOptimizer implements Optimizer {
         this.minDescentLimit = minDescentLimit;
     }
 
-    private DenseVector multiplyAndAddIntercept(DenseMatrix training, DenseVector factors) {
-        DenseVector product = training.multiply(factors.tail());
-        return Vectors.toDenseVector(product.stream().map(x -> x + factors.head()));
-    }
-
     private Polynomial[] polynomialError(DenseMatrix training, DenseVector factors, int varPos, DenseVector trainingY) {
-        Polynomial[] products = training.addColumn(0).multiplyWithVariable(factors, varPos);
+        Polynomial[] products = training.addColumn(1).multiplyWithVariable(factors, varPos);
         for (int i = 0; i < trainingY.size(); i++) {
             products[i].term(-1 * trainingY.value(i));
         }
         return Arrays.stream(products).map(Polynomial::squared).map(x -> x.divideCoefficients(products.length)).toArray(Polynomial[]::new);
     }
 
+    private DenseVector findDelta(DenseVector factors) {
+        DenseVector delta = new DenseVector(factors.size());
+        for (int i = 0; i < factors.size(); i++) {
+            Polynomial loss = Arrays.stream(polynomialError(trainingX, factors, i, trainingY)).reduce(new Polynomial(2), Polynomial::add);
+            // TODO : check
+            loss.term(Regularizers.regularize(factors, regularizer, regularizationCoefficient));
+            log.debug("factors, i & polynomial errors and loss :{} --  {} --- {}  --- {}", factors, i, Arrays.toString(polynomialError(trainingX, factors, i, trainingY)), loss);
+            double derivativeValue = loss.derivative(factors.value(i));
+            log.debug("Loss function derivative is : {} {}", loss.derivative(), derivativeValue);
+            delta.setValue(i, derivativeValue);
+        }
+        return delta;
+    }
+
+    private DenseVector newFactors(DenseVector oldFactors, DenseVector delta) {
+        DenseVector newFactors = new DenseVector(oldFactors.size());
+        for (int i = 0; i < oldFactors.size(); i++) {
+            newFactors.setValue(i, oldFactors.value(i) - (learningRate * delta.value(i)));
+        }
+        return newFactors;
+    }
+
+    private double error(ErrorType errorType, DenseVector factors) {
+        return Errors.type(errorType).apply(trainingX.multiplyAndAddIntercept(factors), trainingY);
+    }
+
+
     @Override
     public Model optimize() {
-
+        log.debug("trainingX,trainingY,testX & testY : {} {}", trainingX, trainingY);
         int iterations = 0;
         DenseVector factors = initial;
-        System.out.println(initial + "is initial");
 
-        double[] errors = new double[maxIterations + 1];
-        errors[0] = Errors.ERROR_FUNCTION.apply(errorType).apply(multiplyAndAddIntercept(trainingX, initial), trainingY);
-
+        DenseVector errors = new DenseVector(maxIterations + 1);
+        errors.setValue(0, error(errorType, factors));
 
         while (iterations < maxIterations) {
-
-            System.out.println(" it " + iterations);
-
-            double[] delta = new double[factors.size()];
-            for (int i = 0; i < factors.size(); i++) {
-                Polynomial loss = Arrays.stream(polynomialError(trainingX, factors, i, trainingY)).reduce(new Polynomial(2), Polynomial::add);
-                System.out.println("loss poly is" + loss);
-                if (regularizer == Regularizer.L2) {
-                    loss.term(0.5 * regularizationCoefficient * (factors.tail()).stream().map(x -> Math.pow(x, 2)).sum());
-                }
-
-                double derivativeOfLoss = loss.derivative(factors.value(i));
-                System.out.println("loss deri is" + loss.derivative() + " " + derivativeOfLoss);
-                delta[i] = derivativeOfLoss;
-            }
-
-            double[] newFactors = new double[factors.size()];
-            for (int i = 0; i < factors.size(); i++) {
-                newFactors[i] = factors.value(i) - (learningRate * delta[i]);
-            }
-
-            factors = new DenseVector(newFactors);
-
-            System.out.println("initial dv tf to" + factors + " delta " + Arrays.toString(delta) + " errors " + Arrays.toString(errors));
-
-
-            errors[++iterations] = Errors.ERROR_FUNCTION.apply(errorType)
-                    .apply(multiplyAndAddIntercept(trainingX, factors), trainingY);
-
-            System.out.println(Arrays.toString(errors) + " = errors");
-
-            if (Math.abs(errors[iterations] - errors[iterations - 1]) <= minDescentLimit) {
-                System.out.println("Min descent limit reached");
+            log.debug("Iteration number {}", iterations);
+            DenseVector delta = findDelta(factors);
+            factors = newFactors(factors, delta);
+            errors.setValue(++iterations, error(errorType, factors));
+            log.info("New factors : {} and delta : {} and errors : {}", factors, delta, errors);
+            if (Math.abs(errors.value(iterations) - errors.value(iterations - 1)) <= minDescentLimit) {
+                log.info("Min descent limit reached");
                 break;
             }
         }
-        DenseVector errorVector = new DenseVector(errors);
-        System.out.println(errorVector + " = errors");
         return new RegressionModel(factors);
     }
 }

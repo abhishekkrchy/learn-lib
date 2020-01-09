@@ -23,8 +23,7 @@ public class Functions {
      * @return the marked node
      */
     public static Polynomial lossFunction(DenseVector denseVector1, DenseVector denseVector2, Regularizer regularizer, double regularizationCoefficient, ErrorType errorType, int varPos) {
-        Polynomial loss = Errors.MARKED_ERROR_FUNCTION.apply(errorType)
-                .apply(varPos).apply(denseVector1, denseVector2);
+        Polynomial loss = Errors.markedType(errorType, varPos).apply(denseVector1, denseVector2);
         double multiplier = Regularizers.regularize(denseVector1, regularizer, regularizationCoefficient);
         loss.term(multiplier, 1);
         return loss;

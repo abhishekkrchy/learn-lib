@@ -3,6 +3,7 @@ package linear.algebra.matrices.dense;
 import linear.algebra.expressions.Polynomial;
 import linear.algebra.matrices.Matrix;
 import linear.algebra.util.ExceptionUtils;
+import linear.algebra.util.Vectors;
 import linear.algebra.util.constants.exception.ExceptionConstants;
 import linear.algebra.vectors.Vector;
 import linear.algebra.vectors.dense.DenseVector;
@@ -99,6 +100,11 @@ public class DenseMatrix extends Matrix {
             result[i] = getRow(i).dotProduct(vector);
         }
         return new DenseVector(result);
+    }
+
+    public DenseVector multiplyAndAddIntercept(Vector vector) {
+        DenseVector product = multiply(vector.tail());
+        return Vectors.toDenseVector(product.stream().map(x -> x + vector.head()));
     }
 
     public Polynomial[] multiplyWithVariable(Vector vector, int varPos) {
