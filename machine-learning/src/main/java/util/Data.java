@@ -6,7 +6,10 @@ import linear.algebra.vectors.dense.DenseVector;
 import util.constants.exception.LearningException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class Data {
 
@@ -17,6 +20,10 @@ public class Data {
         this.matrix = matrix;
         this.testRows = new ArrayList<>((int) Math.floor(matrix.numRows() * (testingDataPercent / 100)));
         validateAndInitialize();
+    }
+
+    public int numColumns() {
+        return matrix.numColumns();
     }
 
     private void validateAndInitialize() {
@@ -31,15 +38,12 @@ public class Data {
      * Assign train and test.
      */
     private void assignTrainAndTest() {
-        //Random random = new Random(new Date().getTime());
-        // TODO : remove hard
-        //Set<Integer> testIndexes = new HashSet<>();//random.ints(testingY.size(), 0, dataSet.numRows()).boxed().collect(Collectors.toSet());
-        testRows.add(3);
+        Random random = new Random(new Date().getTime());
+        testRows.addAll(random.ints(testRows.size(), 0, matrix.numRows()).boxed().collect(Collectors.toSet()));
     }
 
 
     private int testRowsPassed(int rowNumber) {
-        // TODO :
         return (int) testRows.stream().filter(x -> x <= rowNumber).count();
     }
 

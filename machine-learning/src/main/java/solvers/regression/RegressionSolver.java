@@ -1,5 +1,6 @@
 package solvers.regression;
 
+import linear.algebra.statistics.Statistics;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
 import lombok.AllArgsConstructor;
@@ -51,8 +52,7 @@ public class RegressionSolver extends Solver {
     @Override
     protected DenseVector entryPoint() {
         loadDataSet();
-        // TODO : remove hard
-        return new DenseVector(new double[]{1, 2, 3, 4});//Statistics.getNormalDistributionSamples(dataSet.numColumns());
+        return Statistics.getNormalDistributionSamples(data.numColumns());
     }
 
     /**
