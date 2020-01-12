@@ -14,11 +14,12 @@ import java.util.stream.Collectors;
 public class Data {
 
     private final Matrix matrix;
-    private final List<Integer> testRows;
+    private final double testingDataPercent;
+    private final List<Integer> testRows = new ArrayList<>();
 
     public Data(Matrix matrix, double testingDataPercent) {
         this.matrix = matrix;
-        this.testRows = new ArrayList<>((int) Math.floor(matrix.numRows() * (testingDataPercent / 100)));
+        this.testingDataPercent = testingDataPercent;
         validateAndInitialize();
     }
 
@@ -39,7 +40,7 @@ public class Data {
      */
     private void assignTrainAndTest() {
         Random random = new Random(new Date().getTime());
-        testRows.addAll(random.ints(testRows.size(), 0, matrix.numRows()).boxed().collect(Collectors.toSet()));
+        testRows.addAll(random.ints((int) Math.floor(matrix.numRows() * (testingDataPercent / 100)), 0, matrix.numRows()).boxed().collect(Collectors.toSet()));
     }
 
 
