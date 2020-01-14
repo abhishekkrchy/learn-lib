@@ -1,8 +1,6 @@
 package solvers.regression;
 
-import linear.algebra.matrices.Matrix;
 import linear.algebra.matrices.dense.DenseMatrix;
-import linear.algebra.statistics.Statistics;
 import linear.algebra.statistics.errors.Errors;
 import linear.algebra.util.constants.enums.ErrorType;
 import linear.algebra.vectors.dense.DenseVector;
@@ -13,19 +11,13 @@ import org.junit.Before;
 import org.junit.Test;
 import solvers.Solver;
 import util.Data;
-import util.FileUtils;
-import util.constants.enums.OptimizerType;
-import util.constants.enums.Regularizer;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static linear.algebra.util.constants.enums.ErrorType.MSE;
-import static org.junit.Assert.*;
 import static util.constants.enums.OptimizerType.GRADIENT_DESCENT;
 import static util.constants.enums.Regularizer.L2;
-import static util.constants.enums.Regularizer.NONE;
 
 public class RegressionSolverTest {
 

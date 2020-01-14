@@ -21,7 +21,7 @@ public class LinearRegressionExample {
 
         Model model = linearRegressionSolver.solve();
         DenseVector predictions = model.predict(linearRegressionSolver.getData().testingX());
-        log.info("Predictions : " + predictions);
-        log.info("Regression mse : " + Errors.type(ErrorType.MSE).apply(linearRegressionSolver.getData().testingY(), predictions));
+        log.info("Predictions for the test data {} are {}", linearRegressionSolver.getData().testingY(), predictions);
+        log.info("Regression Error comes out to be : {}", Errors.type(ErrorType.MSE).apply(linearRegressionSolver.getData().testingY(), predictions));
     }
 }
